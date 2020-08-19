@@ -1,0 +1,141 @@
+{
+    "paths": {
+        "/api/auth/signup": {
+            "post": {
+                "tags": ["Authentication"],
+                "summary": "signup user",
+                "parameters": [{
+                    "in": "body",
+                    "name": "body",
+                    "description": "ต้องใช้ username ที่ยังไม่มี",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "username": {
+                                "type": "string"
+                            },
+                            "email": {
+                                "type": "string"
+                            },
+                            "roles": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "enum": ["admin", "driver"]
+                                }
+                            },
+                            "password": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "integer"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/signin": {
+            "post": {
+                "tags": ["Authentication"],
+                "summary": "signin user",
+                "parameters": [{
+                    "in": "body",
+                    "name": "body",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "username": {
+                                "type": "string"
+                            },
+                            "password": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "integer"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/test/user": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "get user",
+                "parameters": [{
+                    "name": "x-access-token",
+                    "in": "header",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "integer"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "cpf api documentation"
+    },
+    "host": "103.13.231.22:3000/",
+    "schemes": ["http", "https"],
+    "security": [{
+        "Bearer": []
+    }],
+    "securityDefinitions": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "authorization",
+            "in": "header",
+            "description": "Format 'Bearer [token]'"
+        }
+    },
+    "definitions": {}
+}
