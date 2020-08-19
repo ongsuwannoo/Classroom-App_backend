@@ -1,10 +1,8 @@
 # Classroom-App_backend
 
-1. npm install<br>
-```
-npm install
-```
-2. startl<br>
-```
-npm start
-```
+## How to start
+
+|No.                |Command|Description|
+|----------------|-------------------------------|-----------------------------|
+|1|`npm install`            |ติดตั้ง package.json            |
+|2|`npm start`            |Start Server 🔥 🔥            |
