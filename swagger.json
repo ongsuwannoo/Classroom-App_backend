@@ -11,10 +11,16 @@
                     "schema": {
                         "type": "object",
                         "properties": {
-                            "name": {
+                            "firstname": {
+                                "type": "string"
+                            },
+                            "lastname": {
                                 "type": "string"
                             },
                             "username": {
+                                "type": "string"
+                            },
+                            "password": {
                                 "type": "string"
                             },
                             "email": {
@@ -26,9 +32,6 @@
                                     "type": "string",
                                     "enum": ["admin", "driver"]
                                 }
-                            },
-                            "password": {
-                                "type": "string"
                             }
                         }
                     }

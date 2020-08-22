@@ -13,7 +13,8 @@ exports.signup = (req, res) => {
 	console.log("Processing func -> SignUp");
 	
 	User.create({
-		name: req.body.name,
+		firstname: req.body.firstname,
+		lastname: req.body.lastname,
 		username: req.body.username,
 		email: req.body.email,
 		password: bcrypt.hashSync(req.body.password, 8)
@@ -67,7 +68,7 @@ exports.signin = (req, res) => {
 exports.userContent = (req, res) => {
 	User.findOne({
 		where: {id: req.userId},
-		attributes: ['name', 'username', 'email'],
+		attributes: ['firstname', 'lastname', 'email'],
 		include: [{
 			model: Role,
 			attributes: ['id', 'name'],
