@@ -5,7 +5,7 @@ const env = require('./credential');
 //     host: env.host,
 //     dialect: 'postgres'
 // });
-const sequelize = new Sequelize(`postgres://${env.user}:${env.password}@${env.host}:${env.port}/${env.database}`)
+const sequelize = new Sequelize(`postgres://${env.user}:${env.password}@${env.host}:${env.port}/${env.database}`, {logging: false})
 
 const db = {};
 db.Sequelize = Sequelize;

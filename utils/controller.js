@@ -13,6 +13,7 @@ exports.pdf = (req, res) => {
 	
 	let file = fs.createReadStream('./public/RDMS.pdf');
 	let stat = fs.statSync('./public/RDMS.pdf');
+	res.setHeader('Content-disposition', 'inline; filename="' + 'RDMS.pdf' + '"');
 	res.setHeader('Content-Length', stat.size);
 	res.setHeader('Content-Type', 'application/pdf');
 	file.pipe(res);
