@@ -125,9 +125,9 @@
     "swagger": "2.0",
     "info": {
         "version": "1.0.0",
-        "title": "cpf api documentation"
+        "title": "classroom api documentation"
     },
-    "host": "localhost:3000/",
+    "host": "103.13.231.22:3000/",
     "schemes": ["http", "https"],
     "security": [{
         "Bearer": []

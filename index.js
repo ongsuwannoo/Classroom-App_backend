@@ -15,7 +15,9 @@ sequelize_force = false
 db.sequelize.sync({
     force: sequelize_force
 }).then(() => {
-    console.log('----> Drop and Resync with { force: '+sequelize_force+' }');
+    sequelize_force ? 
+    console.log("\x1b[31m", '----> Drop and Resync with { force: '+sequelize_force+' }', "\x1b[0m") :
+    console.log("\x1b[32m", '----> Drop and Resync with { force: '+sequelize_force+' }', "\x1b[0m");
     (async () => {
         initial();
     })();

@@ -1,5 +1,6 @@
 const db = require('./DBConfig.js');
 const config = require('./config.js');
+const fs = require('fs');
 const User = db.user;
 const Role = db.role;
 
@@ -8,6 +9,15 @@ const Op = db.Sequelize.Op;
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 
+exports.pdf = (req, res) => {
+	
+	let file = fs.createReadStream('./public/RDMS.pdf');
+	let stat = fs.statSync('./public/RDMS.pdf');
+	res.setHeader('Content-Length', stat.size);
+	res.setHeader('Content-Type', 'application/pdf');
+	file.pipe(res);
+	// console.log('\x1b[36m%s\x1b[0m', file);
+}
 exports.signup = (req, res) => {
 	// Save User to Database
 	console.log("Processing func -> SignUp");

@@ -11,4 +11,6 @@ module.exports = function (app) {
 
     app.get('/api/test/user', [authJwt.verifyToken], controller.userContent);
 
+    app.get('/api/get/pdf', controller.pdf);
+
 }
