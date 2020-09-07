@@ -16,10 +16,10 @@ sequelize_force = false
 db.sequelize.sync({
     force: sequelize_force
 }).then(() => {
-    sequelize_force ? 
-    console.log("\x1b[31m"+'----> Drop and Resync with { force: '+sequelize_force+' }', "\x1b[0m") :
-    console.log("\x1b[32m"+'----> Drop and Resync with { force: '+sequelize_force+' }', "\x1b[0m");
-    (async () => {
+    sequelize_force ?
+        console.log("\x1b[31m" + '----> Drop and Resync with { force: ' + sequelize_force + ' }', "\x1b[0m") :
+        console.log("\x1b[32m" + '----> Drop and Resync with { force: ' + sequelize_force + ' }', "\x1b[0m");
+    (async() => {
         initial();
     })();
 });
@@ -35,6 +35,6 @@ function initial() {
         Role.create({
             id: index + 1,
             name: ROLEs[index]
-        }).catch( () => {});
+        }).catch(() => {});
     }
 }

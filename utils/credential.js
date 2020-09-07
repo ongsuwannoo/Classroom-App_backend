@@ -1,5 +1,5 @@
 const env = {
-    host: '103.13.231.22',
+    host: 'localhost',
     database: 'node_db',
     user: 'postgres',
     password: '1234',
