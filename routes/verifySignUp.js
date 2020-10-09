@@ -5,10 +5,22 @@ const User = db.user;
 const Role = db.role;
 
 checkDuplicateUserNameOrEmail = (req, res, next) => {
+    let playload = req.body
+
+    if (!playload.username) {
+        res.status(400).send("Fail -> Username is null");
+        return;
+    }
+
+    if (!playload.email) {
+        res.status(400).send("Fail -> Email is null");
+        return;
+    }
+    
     // -> Check Username is already in use
     User.findOne({
         where: {
-            username: req.body.username
+            username: playload.username
         }
     }).then(user => {
         if (user) {
@@ -19,7 +31,7 @@ checkDuplicateUserNameOrEmail = (req, res, next) => {
         // -> Check Email is already in use
         User.findOne({
             where: {
-                email: req.body.email
+                email: playload.email
             }
         }).then(user => {
             if (user) {

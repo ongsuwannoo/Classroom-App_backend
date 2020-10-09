@@ -15,6 +15,12 @@ module.exports = (sequelize, Sequelize) => {
         password: {
             type: Sequelize.STRING
         },
+        fid: {
+            type: Sequelize.STRING
+        },
+        facebookName: {
+            type: Sequelize.STRING
+        },
     });
 
     return User;

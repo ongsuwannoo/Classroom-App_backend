@@ -19,6 +19,7 @@ exports.pdf = (req, res) => {
     file.pipe(res);
     // console.log('\x1b[36m%s\x1b[0m', file);
 }
+
 exports.signup = (req, res) => {
     // Save User to Database
     console.log("Processing func -> SignUp | username = " + req.body.username);
