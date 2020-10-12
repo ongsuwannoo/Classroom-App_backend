@@ -53,8 +53,26 @@ checkRolesExisted = (req, res, next) => {
     next();
 }
 
+checkStudentId = (req, res, next) => {
+    let playload = req.body
+    if (isNaN(playload.sid)) {
+        res.status(400).send("Fail -> Student ID is invalid = " + playload.sid);
+        return;
+    }
+
+    if (playload.sid.length != 8) {
+        res.status(400).send("Fail -> Student ID is invalid = " + playload.sid);
+        return;
+    }
+
+    res.status(200).send("Test success sid = " + playload.sid);
+    // next();
+    return;
+}
+
 const signUpVerify = {};
 signUpVerify.checkDuplicateUserNameOrEmail = checkDuplicateUserNameOrEmail;
 signUpVerify.checkRolesExisted = checkRolesExisted;
+signUpVerify.checkStudentId = checkStudentId;
 
 module.exports = signUpVerify;

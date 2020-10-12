@@ -9,6 +9,8 @@ module.exports = function(app) {
 
     app.post('/api/auth/signin', controller.signin);
 
+    app.post('/api/test/sid', verifySignUp.checkStudentId);
+
     app.get('/api/test/user', [authJwt.verifyToken], controller.userContent);
 
     app.get('/api/test/admin', [authJwt.verifyToken, authJwt.isAdmin], controller.adminBoard);

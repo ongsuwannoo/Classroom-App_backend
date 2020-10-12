@@ -22,18 +22,20 @@ exports.pdf = (req, res) => {
 
 exports.signup = (req, res) => {
     // Save User to Database
-    console.log("Processing func -> SignUp | username = " + req.body.username);
+    let playload = req.body
+    console.log("Processing func -> SignUp | username = " + playload.username);
 
     User.create({
-        firstname: req.body.firstname,
-        lastname: req.body.lastname,
-        username: req.body.username,
-        email: req.body.email,
-        password: bcrypt.hashSync(req.body.password, 8)
+        firstname: playload.firstname,
+        lastname: playload.lastname,
+        username: playload.username,
+        email: playload.email,
+        password: bcrypt.hashSync(playload.password, 8),
+        sid: playload.sid,
     }).then(user => {
         Role.findOne({
             where: {
-                name: req.body.roles.toUpperCase()
+                name: playload.roles.toUpperCase()
             }
         }).then(roles => {
             user.setRoles(roles).then(() => {

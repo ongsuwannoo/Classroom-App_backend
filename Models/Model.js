@@ -3,7 +3,12 @@ const db = require('../utils/DBConfig')
 const sequelize = db.sequelize
 
 Model = {};
+Model.User = require('./user.model')(sequelize, DataTypes);
+Model.Classroom = require('./classroom.model')(sequelize, DataTypes);
 
-// sequelize.sync();
+Model.User.hasMany(Model.Classroom, { as: "classrooms" });
+Model.Classroom.belongsTo(Model.User, {
+    as: "owner",
+});
 
 module.exports = Model;
