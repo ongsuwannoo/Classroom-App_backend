@@ -10,6 +10,8 @@ module.exports = function(app) {
 
     app.post('/api/auth/signin', controller.signin);
 
+    app.get('/api/test/user', [authJwt.verifyToken], controller.userContent);
+
     app.post('/api/test/sid', verifySignUp.checkStudentId);
 
     app.post('/api/classroom/create', [authJwt.verifyToken], controller_classroom.create);
