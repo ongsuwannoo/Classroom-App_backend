@@ -1,144 +1,303 @@
 {
-    "paths": {
-        "/api/auth/signup": {
-            "post": {
-                "tags": ["Authentication"],
-                "summary": "signup user",
-                "parameters": [{
-                    "in": "body",
-                    "name": "body",
-                    "description": "ต้องใช้ username ที่ยังไม่มี",
-                    "schema": {
-                        "type": "object",
-                        "properties": {
-                            "firstname": {
-                                "type": "string"
-                            },
-                            "lastname": {
-                                "type": "string"
-                            },
-                            "username": {
-                                "type": "string"
-                            },
-                            "password": {
-                                "type": "string"
-                            },
-                            "email": {
-                                "type": "string"
-                            },
-                            "roles": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string",
-                                    "enum": ["admin", "driver"]
-                                }
-                            }
-                        }
-                    }
-                }],
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "status": {
-                                    "type": "integer"
-                                },
-                                "message": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
+  "paths": {
+    "/api/auth/signup": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "signup user",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "ต้องใช้ username ที่ยังไม่มี",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "firstname": {
+                  "type": "string"
+                },
+                "lastname": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "roles": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "admin",
+                      "driver"
+                    ]
+                  }
                 }
+              }
             }
-        },
-        "/api/auth/signin": {
-            "post": {
-                "tags": ["Authentication"],
-                "summary": "signin user",
-                "parameters": [{
-                    "in": "body",
-                    "name": "body",
-                    "schema": {
-                        "type": "object",
-                        "properties": {
-                            "username": {
-                                "type": "string"
-                            },
-                            "password": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }],
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "status": {
-                                    "type": "integer"
-                                },
-                                "message": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "integer"
+                },
+                "message": {
+                  "type": "string"
                 }
+              }
             }
-        },
-        "/api/test/user": {
-            "get": {
-                "tags": [
-                    "Authentication"
-                ],
-                "summary": "get user",
-                "parameters": [{
-                    "name": "x-access-token",
-                    "in": "header",
-                    "required": true,
-                    "type": "string"
-                }],
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "status": {
-                                    "type": "integer"
-                                },
-                                "message": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+          }
         }
+      }
     },
-    "swagger": "2.0",
-    "info": {
-        "version": "1.0.0",
-        "title": "classroom api documentation"
+    "/api/auth/signin": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "signin user",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "integer"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
     },
-    "host": "103.13.231.22:3000/",
-    "schemes": ["http", "https"],
-    "security": [{
-        "Bearer": []
-    }],
-    "securityDefinitions": {
-        "Bearer": {
-            "type": "apiKey",
-            "name": "authorization",
+    "/api/test/user": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "get user",
+        "parameters": [
+          {
+            "name": "x-access-token",
             "in": "header",
-            "description": "Format 'Bearer [token]'"
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "integer"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
         }
+      }
     },
-    "definitions": {}
+    "/api/classroom/create": {
+      "post": {
+        "tags": [
+          "Classroom management"
+        ],
+        "summary": "Create Classroom",
+        "description": "Create Classroom",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-access-token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A Classroom object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "description": "The Classroom ID."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "The Classroom name."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "The Classroom description."
+                },
+                "ownerId": {
+                  "type": "integer",
+                  "description": "The Classroom owner Id."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/get/{classroomId}": {
+      "get": {
+        "tags": [
+          "Classroom management"
+        ],
+        "summary": "get classroom by ID",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-access-token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "classroomId",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric ID of the classroom to get"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A Classroom object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "description": "The Classroom description."
+                },
+                "classroom": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The Classroom ID."
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "The Classroom name."
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "The Classroom description."
+                    },
+                    "ownerId": {
+                      "type": "integer",
+                      "description": "The Classroom owner Id."
+                    },
+                    "owner": {
+                      "type": "object",
+                      "properties": {
+                        "firstname": {
+                          "type": "string",
+                          "description": "The User firstname."
+                        },
+                        "lastname": {
+                          "type": "string",
+                          "description": "The User lastname."
+                        },
+                        "email": {
+                          "type": "string",
+                          "description": "The User email."
+                        },
+                        "sid": {
+                          "type": "string",
+                          "description": "The User student."
+                        }
+                      }
+                    }
+                  }
+                },
+                "userIsOwner": {
+                  "type": "boolean",
+                  "description": "The User is owner classroom."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "classroom api documentation"
+  },
+  "host": "localhost:3000",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "security": [
+    {
+      "Bearer": []
+    }
+  ],
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "authorization",
+      "in": "header",
+      "description": "Format 'Bearer [token]'"
+    }
+  },
+  "definitions": {}
 }
