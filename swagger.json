@@ -261,7 +261,7 @@
     "version": "1.0.0",
     "title": "classroom api documentation"
   },
-  "host": "localhost:3000",
+  "host": "103.13.231.22:3000",
   "schemes": [
     "http",
     "https"
