@@ -8,12 +8,12 @@ checkDuplicateUserNameOrEmail = (req, res, next) => {
     let playload = req.body
 
     if (!playload.username) {
-        res.status(400).send("Fail -> Username is null");
+        res.status(400).send("Fail -> Username is null - username ว่างอ่าา");
         return;
     }
 
     if (!playload.email) {
-        res.status(400).send("Fail -> Email is null");
+        res.status(400).send("Fail -> Email is null - email มันว่างไม่ได้นะคัฟ");
         return;
     }
     
@@ -24,7 +24,7 @@ checkDuplicateUserNameOrEmail = (req, res, next) => {
         }
     }).then(user => {
         if (user) {
-            res.status(400).send("Fail -> Username is already taken!");
+            res.status(400).send("Fail -> Username is already taken! - มี username นี้แย้วว");
             return;
         }
 
@@ -35,7 +35,7 @@ checkDuplicateUserNameOrEmail = (req, res, next) => {
             }
         }).then(user => {
             if (user) {
-                res.status(400).send("Fail -> Email is already in use!");
+                res.status(400).send("Fail -> Email is already in use! - มีคนแย่ง email ไปแล้วว");
                 return;
             }
 
@@ -47,7 +47,7 @@ checkDuplicateUserNameOrEmail = (req, res, next) => {
 checkRolesExisted = (req, res, next) => {
 
     if (!ROLEs.includes(req.body.roles.toUpperCase())) {
-        res.status(400).send("Fail -> Does NOT exist Role = " + req.body.roles);
+        res.status(400).send("Fail -> Does NOT exist Role - role ผิดงับบ = " + req.body.roles);
         return;
     }
     next();

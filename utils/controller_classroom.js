@@ -17,14 +17,14 @@ exports.create = (req, res) => {
         classroom.ownerId = user.id
         classroom.save().then(() => {
             res.status(201).json({
-                "description": "Classroom Created",
+                "description": "Classroom Created - สร้าง Classroom แล้ว",
                 "Classroom": classroom
             });
         })
 
     }).catch(err => {
         res.status(500).json({
-            "description": "Can not access User Page",
+            "description": "Can not access User Page - เข้า Classroom ไม่ได้",
             "error": err
         });
     })
@@ -43,19 +43,19 @@ exports.getClassroom = (req, res) => {
             rejectOnEmpty: true
         }).then(classroom => {
             res.status(200).json({
-                "description": "Classroom Content Page",
+                "description": "Classroom Content Page - ดึง Classroom สำเร็จ",
                 "classroom": classroom,
                 "userIsOwner": (req.userId == classroom.ownerId)
             });
         }).catch(err => {
             if (isNaN(req.params.classroomId)) {
                 res.status(400).json({
-                    "description": "ClassroomId is not Integer",
+                    "description": "ClassroomId is not Integer - ID ของ Classroom ไม่ได้เป็นตัวเลขจำนวนเต็ม",
                     "error": err
                 });
             } else {
                 res.status(404).json({
-                    "description": "Classroom Not Found",
+                    "description": "Classroom Not Found - ไม่เจอ Classroom งับ ",
                     "error": err
                 });
             }
@@ -64,7 +64,7 @@ exports.getClassroom = (req, res) => {
 
     }).catch(err => {
         res.status(500).json({
-            "description": "Can not access User Page",
+            "description": "Can not access User Page - เข้าไม่ได้งับ",
             "error": err
         });
     })

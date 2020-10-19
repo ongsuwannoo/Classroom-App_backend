@@ -10,7 +10,7 @@ verifyToken = (req, res, next) => {
     if (!token) {
         return res.status(403).send({
             auth: false,
-            message: 'No token provided.'
+            message: 'No token provided. - ไม่มี token ส่งมางาา'
         });
     }
 
@@ -18,7 +18,7 @@ verifyToken = (req, res, next) => {
         if (err) {
             return res.status(500).send({
                 auth: false,
-                message: 'Fail to Authentication. Error -> ' + err
+                message: 'Fail to Authentication. - Token ผิด Error -> ' + err
             });
         }
         req.userId = decoded.id;

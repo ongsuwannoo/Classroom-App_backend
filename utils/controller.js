@@ -39,7 +39,7 @@ exports.signup = (req, res) => {
             }
         }).then(roles => {
             user.setRoles(roles).then(() => {
-                res.send("User registered successfully!");
+                res.status(201).send("User registered successfully! - สมัครแล้วใช้ได้เลย!!");
             });
         }).catch(err => {
             res.status(500).send("Error -> " + err);
@@ -67,7 +67,7 @@ exports.signin = (req, res) => {
         }
 
         var token = jwt.sign({ id: user.id }, config.secret, {
-            expiresIn: 86400 // expires in 24 hours
+            expiresIn: config.expiresIn // expires in 24 hours
         });
 
         console.log('Username : '+user.username)
@@ -82,7 +82,7 @@ exports.signin = (req, res) => {
 exports.userContent = (req, res) => {
     User.findOne({
         where: { id: req.userId },
-        attributes: ['firstname', 'lastname', 'email'],
+        attributes: ['username', 'firstname', 'lastname', 'email'],
         include: [{
             model: Role,
             attributes: ['id', 'name'],
@@ -91,13 +91,14 @@ exports.userContent = (req, res) => {
             }
         }]
     }).then(user => {
+        console.log("User check : "+ user.username)
         res.status(200).json({
-            "description": "User Content Page",
+            "description": "User Content Page - Token นี้สามารถใช้ได้",
             "user": user
         });
     }).catch(err => {
         res.status(500).json({
-            "description": "Can not access User Page",
+            "description": "Can not access User Page - Token นี้สามารถใช้ได้",
             "error": err
         });
     })
