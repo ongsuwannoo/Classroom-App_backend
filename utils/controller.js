@@ -70,6 +70,8 @@ exports.signin = (req, res) => {
             expiresIn: 86400 // expires in 24 hours
         });
 
+        console.log('Username : '+user.username)
+        console.log('Token : '+token)
         res.status(200).send({ auth: true, accessToken: token });
 
     }).catch(err => {

@@ -29,15 +29,16 @@
                 "email": {
                   "type": "string"
                 },
+                "sid":{
+                  "type": "string"
+                },
                 "roles": {
-                  "type": "array",
-                  "items": {
-                    "type": "string",
-                    "enum": [
-                      "admin",
-                      "driver"
-                    ]
-                  }
+                  "type": "string",
+                  "enum": [
+                    "admin",
+                    "student",
+                    "teacher"
+                  ]
                 }
               }
             }
