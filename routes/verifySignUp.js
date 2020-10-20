@@ -4,19 +4,14 @@ const ROLEs = config.ROLEs;
 const User = db.user;
 const Role = db.role;
 
-checkDuplicateUserNameOrEmail = (req, res, next) => {
+checkDuplicateUserName = (req, res, next) => {
     let playload = req.body
-
+    
     if (!playload.username) {
         res.status(400).send("Fail -> Username is null - username ว่างอ่าา");
         return;
     }
 
-    if (!playload.email) {
-        res.status(400).send("Fail -> Email is null - email มันว่างไม่ได้นะคัฟ");
-        return;
-    }
-    
     // -> Check Username is already in use
     User.findOne({
         where: {
@@ -27,20 +22,30 @@ checkDuplicateUserNameOrEmail = (req, res, next) => {
             res.status(400).send("Fail -> Username is already taken! - มี username นี้แย้วว");
             return;
         }
+        next();
+    });
 
-        // -> Check Email is already in use
-        User.findOne({
-            where: {
-                email: playload.email
-            }
-        }).then(user => {
-            if (user) {
-                res.status(400).send("Fail -> Email is already in use! - มีคนแย่ง email ไปแล้วว");
-                return;
-            }
+}
 
-            next();
-        });
+checkDuplicateEmail = (req, res, next) => {
+    let playload = req.body
+
+    if (!playload.email) {
+        res.status(400).send("Fail -> Email is null - email มันว่างไม่ได้นะคัฟ");
+        return;
+    }
+
+    // -> Check Email is already in use
+    User.findOne({
+        where: {
+            email: playload.email
+        }
+    }).then(user => {
+        if (user) {
+            res.status(400).send("Fail -> Email is already in use! - มีคนแย่ง email ไปแล้วว");
+            return;
+        }
+        next();
     });
 }
 
@@ -71,7 +76,8 @@ checkStudentId = (req, res, next) => {
 }
 
 const signUpVerify = {};
-signUpVerify.checkDuplicateUserNameOrEmail = checkDuplicateUserNameOrEmail;
+signUpVerify.checkDuplicateUserName = checkDuplicateUserName;
+signUpVerify.checkDuplicateEmail = checkDuplicateEmail;
 signUpVerify.checkRolesExisted = checkRolesExisted;
 signUpVerify.checkStudentId = checkStudentId;
 

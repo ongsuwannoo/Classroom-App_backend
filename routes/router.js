@@ -6,9 +6,11 @@ module.exports = function(app) {
     const controller = require('../utils/controller.js');
     const controller_classroom = require('../utils/controller_classroom.js');
 
-    app.post('/api/auth/signup', [verifySignUp.checkDuplicateUserNameOrEmail, verifySignUp.checkRolesExisted], controller.signup);
+    app.post('/api/auth/signup', [verifySignUp.checkDuplicateUserName, verifySignUp.checkDuplicateEmail, verifySignUp.checkRolesExisted], controller.signup);
 
     app.post('/api/auth/signin', controller.signin);
+
+    app.post('/api/auth/facebook', [verifySignUp.checkDuplicateEmail], controller.authFacebook);
 
     app.get('/api/test/user', [authJwt.verifyToken], controller.userContent);
 

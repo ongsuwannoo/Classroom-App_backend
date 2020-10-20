@@ -24,7 +24,6 @@ exports.signup = (req, res) => {
     // Save User to Database
     let playload = req.body
     console.log("Processing func -> SignUp | username = " + playload.username);
-
     User.create({
         firstname: playload.firstname,
         lastname: playload.lastname,
@@ -77,6 +76,10 @@ exports.signin = (req, res) => {
     }).catch(err => {
         res.status(500).send('Error -> ' + err);
     });
+}
+
+exports.authFacebook = (req, res) =>{
+    return res.status(200).send("Test")
 }
 
 exports.userContent = (req, res) => {
