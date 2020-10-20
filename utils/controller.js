@@ -70,8 +70,8 @@ exports.signin = (req, res) => {
             expiresIn: config.expiresIn // expires in 24 hours
         });
 
-        console.log('Username : '+user.username)
-        console.log('Token : '+token)
+        console.log('Username : ' + user.username)
+        console.log('Token : ' + token)
         res.status(200).send({ auth: true, accessToken: token });
 
     }).catch(err => {
@@ -91,7 +91,7 @@ exports.userContent = (req, res) => {
             }
         }]
     }).then(user => {
-        console.log("User check : "+ user.username)
+        console.log("User check : " + user.username, new Date().toLocaleTimeString())
         res.status(200).json({
             "description": "User Content Page - Token นี้สามารถใช้ได้",
             "user": user

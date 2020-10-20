@@ -11,7 +11,7 @@ const config = require('./utils/config.js');
 const Role = db.role;
 const ROLEs = config.ROLEs;
 
-console.log("\n\x1b[33mServer status\x1b[0m")
+console.log(`\n\x1b[33mServer status - `+new Date().toLocaleTimeString()+`\x1b[0m`)
 console.log(`- Token expires in ${config.expiresIn} sec`);
 
 // force: true will drop the table if it already exists <<<<<<<<<<<
