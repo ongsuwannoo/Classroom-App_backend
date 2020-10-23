@@ -45,7 +45,7 @@ exports.getClassroom = (req, res) => {
             res.status(200).json({
                 "description": "Classroom Content Page - ดึง Classroom สำเร็จ",
                 "classroom": classroom,
-                "userIsOwner": (req.userId == classroom.ownerId)
+                "userIsOwner": (req.userId === classroom.ownerId)
             });
         }).catch(err => {
             if (isNaN(req.params.classroomId)) {

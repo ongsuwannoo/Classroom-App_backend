@@ -82,36 +82,39 @@ exports.authFacebook = (req, res) => {
     let playload = req.body
     console.log("FB Sign-in")
 
+    createToken = (user) => {
+        if (!(playload.id === user.fid)) {
+            return res.status(401).send({ auth: false, accessToken: null, reason: "Facebook ID invalid!" });
+        }
+
+        var token = jwt.sign({ id: user.id }, config.secret, {
+            expiresIn: config.expiresIn // expires in 24 hours
+        });
+
+        console.log('Facebook name : ' + user.facebookName);
+        console.log('Token : ' + token);
+        res.status(200).send({ auth: true, accessToken: token });
+    }
+
     User.findOne({
         where: {
             email: playload.email
         }
     }).then(user => {
-        if (user) {
-            if (!(playload.id === user.fid)) {
-                return res.status(401).send({ auth: false, accessToken: null, reason: "Facebook ID invalid!" });
-            }
-
-            var token = jwt.sign({ id: user.id }, config.secret, {
-                expiresIn: config.expiresIn // expires in 24 hours
-            });
-
-            console.log('Facebook name : ' + user.facebookName)
-            console.log('Token : ' + token)
-            res.status(200).send({ auth: true, accessToken: token })
-        } else {
+        if (!user) {
             User.create({
                 facebookName: playload.name,
                 fid: playload.id,
                 email: playload.email,
-            }).then(user => {
+            }).then(userCreate => {
                 Role.findOne({
                     where: {
                         name: "student"
                     }
                 }).then(roles => {
-                    user.setRoles(roles).then(() => {
-                        res.status(200).send("User registered successfully! - สมัครแล้วใช้ได้เลย!!");
+                    userCreate.setRoles(roles).then(() => {
+                        console.log("User Facebook registered successfully")
+                        createToken(userCreate)
                     });
                 }).catch(err => {
                     res.status(500).send("Error -> " + err);
@@ -119,10 +122,10 @@ exports.authFacebook = (req, res) => {
             }).catch(err => {
                 res.status(500).send("Fail! Error -> " + err);
             })
+        } else {
+            createToken(user)
         }
     });
-
-
 }
 
 exports.userContent = (req, res) => {
