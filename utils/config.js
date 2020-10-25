@@ -1,5 +1,5 @@
 module.exports = {
     'secret': 'grokonez-super-secret-key',
     ROLEs: ['STUDENT', 'TEACHER', 'ADMIN'],
-    'expiresIn': 300
+    'expiresIn': 3000
 };

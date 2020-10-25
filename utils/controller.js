@@ -80,6 +80,8 @@ exports.signin = (req, res) => {
 
 exports.authFacebook = (req, res) => {
     let playload = req.body
+    playload.roles = "student"
+
     console.log("FB Sign-in")
 
     createToken = (user) => {
@@ -109,7 +111,7 @@ exports.authFacebook = (req, res) => {
             }).then(userCreate => {
                 Role.findOne({
                     where: {
-                        name: "student"
+                        name: playload.roles.toUpperCase()
                     }
                 }).then(roles => {
                     userCreate.setRoles(roles).then(() => {
@@ -131,7 +133,7 @@ exports.authFacebook = (req, res) => {
 exports.userContent = (req, res) => {
     User.findOne({
         where: { id: req.userId },
-        attributes: ['username', 'firstname', 'lastname', 'email'],
+        attributes: ['username', 'firstname', 'lastname', 'email', 'fid', 'facebookName'],
         include: [{
             model: Role,
             attributes: ['id', 'name'],
@@ -147,7 +149,7 @@ exports.userContent = (req, res) => {
         });
     }).catch(err => {
         res.status(500).json({
-            "description": "Can not access User Page - Token นี้สามารถใช้ได้",
+            "description": "Can not access User Page - Token นี้ไม่สามารถใช้ได้",
             "error": err
         });
     })

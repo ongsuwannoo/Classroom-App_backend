@@ -18,7 +18,7 @@ db.classroom = require('../Models/classroom.model.js')(sequelize, Sequelize);
 db.role.belongsToMany(db.user, { through: 'user_roles', foreignKey: 'roleId', otherKey: 'userId'});
 db.user.belongsToMany(db.role, { through: 'user_roles', foreignKey: 'userId', otherKey: 'roleId'});
 
-db.classroom.belongsTo(db.user, {
-    as: "owner",
-});
+db.classroom.belongsToMany(db.user, { through: 'user_classroom', foreignKey: 'classroomId', otherKey: 'userId'});
+db.user.belongsToMany(db.classroom, { through: 'user_classroom', foreignKey: 'userId', otherKey: 'classroomId'});
+
 module.exports = db;
