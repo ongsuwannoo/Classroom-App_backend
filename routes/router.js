@@ -26,9 +26,11 @@ module.exports = function (app) {
 
     app.get('/api/classroom/get/all', [authJwt.verifyToken], controller_classroom.getAllClassroom);
 
-    app.get('/api/classroom/get/:classroomId', [authJwt.verifyToken], controller_classroom.getClassroom);
+    app.get('/api/classroom/get/:classroomId', [authJwt.verifyToken], controller_classroom.getClassroomById);
 
-    app.post('/api/classroom/enter', [authJwt.verifyToken], controller_classroom.userClassroom);
+    app.post('/api/classroom/enter', [authJwt.verifyToken], controller_classroom.addUserClassroom);
+
+    app.get('/api/classroom/getallclassroombyuser', [authJwt.verifyToken], controller_classroom.getAllClassroomByUser);
 
     //other
 
