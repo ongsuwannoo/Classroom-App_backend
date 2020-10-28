@@ -169,14 +169,17 @@ exports.addUserClassroom = (req, res) => {
 }
 
 exports.getAllClassroomByUser = (req, res) => {
-    Classroom.findByPk(req.userId, {
-        include: classroom,
+    User.findByPk(req.userId, {
+        attributes: [],
+        include: {
+            model: classroom,
+            attributes: ['id', 'name', 'description', 'ownerId']
+        }
     }).then((result)=>{
-        res.status(200).json({
+        res.status(200).send({
             "description": "Enter classroom success! - เข้าสู่ classroom เรียบร้อยแล้ว",
             "message": "เข้าสู่ classroom เรียบร้อยแล้ว",
-            "result": result
+            "classrooms" : result.classrooms
         });
     })
-    // console.log(req.userId)
 }
