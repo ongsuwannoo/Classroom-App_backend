@@ -30,7 +30,7 @@ module.exports = function (app) {
 
     app.post('/api/classroom/enter', [authJwt.verifyToken], controller_classroom.addUserClassroom);
 
-    app.get('/api/classroom/getallclassroombyuser', [authJwt.verifyToken], controller_classroom.getAllClassroomByUser);
+    app.get('/api/classroom/get/all/classroombyuser', [authJwt.verifyToken], controller_classroom.getAllClassroomByUser);
 
     //other
 

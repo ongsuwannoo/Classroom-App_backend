@@ -52,7 +52,7 @@ exports.getAllClassroom = (req, res) => {
     }).then(() => {
         Classroom.findAll().then(classrooms => {
             classrooms.forEach(classroom => {
-                classroom.dataValues.userIsOwner = (req.userId === classroom.userId)
+                classroom.dataValues.userIsOwner = (req.userId === classroom.ownerId)
             });
             res.status(200).json({
                 "description": "classrooms Content Page - ดึง classrooms สำเร็จ",
@@ -176,6 +176,9 @@ exports.getAllClassroomByUser = (req, res) => {
             attributes: ['id', 'name', 'description', 'ownerId']
         }
     }).then((result)=>{
+        result.classrooms.forEach(classroom => {
+            classroom.dataValues.userIsOwner = (req.userId === classroom.ownerId)
+        });
         res.status(200).send({
             "description": "Enter classroom success! - เข้าสู่ classroom เรียบร้อยแล้ว",
             "message": "เข้าสู่ classroom เรียบร้อยแล้ว",
