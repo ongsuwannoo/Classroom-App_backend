@@ -24,7 +24,9 @@ exports.create = (req, res) => {
             name: playload.name,
             description: playload.description,
             code: makeCode(5),
-            ownerId: user.id
+            ownerId: user.id,
+            day:playload.day,
+            time:playload.time
         }).then(classroom => {
             user.addClassrooms(classroom).then(() => {
                 res.status(201).json({
