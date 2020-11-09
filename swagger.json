@@ -29,7 +29,7 @@
                 "email": {
                   "type": "string"
                 },
-                "sid":{
+                "sid": {
                   "type": "string"
                 },
                 "roles": {
@@ -146,6 +146,14 @@
                 },
                 "description": {
                   "type": "string"
+                },
+                "day": {
+                  "type": "string",
+                  "description": "Day of studies."
+                },
+                "time": {
+                  "type": "string",
+                  "description": "Time of studies."
                 }
               }
             }
@@ -204,7 +212,7 @@
                   "type": "string",
                   "description": "The Classroom description."
                 },
-                "classroom": {
+                "classrooms": {
                   "type": "object",
                   "properties": {
                     "id": {
@@ -219,36 +227,202 @@
                       "type": "string",
                       "description": "The Classroom description."
                     },
+                    "code": {
+                      "type": "string",
+                      "description": "The Code join classroom."
+                    },
                     "ownerId": {
                       "type": "integer",
                       "description": "The Classroom owner Id."
                     },
-                    "owner": {
+                    "day": {
+                      "type": "string",
+                      "description": "Day of studies."
+                    },
+                    "time": {
+                      "type": "string",
+                      "description": "Time of studies."
+                    },
+                    "user_classroom": {
                       "type": "object",
                       "properties": {
-                        "firstname": {
-                          "type": "string",
-                          "description": "The User firstname."
+                        "classroomId": {
+                          "type": "integer"
                         },
-                        "lastname": {
-                          "type": "string",
-                          "description": "The User lastname."
-                        },
-                        "email": {
-                          "type": "string",
-                          "description": "The User email."
-                        },
-                        "sid": {
-                          "type": "string",
-                          "description": "The User student."
+                        "userId": {
+                          "type": "integer"
                         }
+                      }
+                    },
+                    "userIsOwner": {
+                      "type": "boolean",
+                      "description": "The User is owner classroom."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/get/all": {
+      "get": {
+        "tags": [
+          "Classroom management"
+        ],
+        "summary": "get classroom All",
+        "responses": {
+          "200": {
+            "description": "A Classroom object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "description": "The Classroom description."
+                },
+                "classrooms": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "The Classroom ID."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The Classroom name."
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "The Classroom description."
+                      },
+                      "code": {
+                        "type": "string",
+                        "description": "The Code join classroom."
+                      },
+                      "ownerId": {
+                        "type": "integer",
+                        "description": "The Classroom owner Id."
+                      },
+                      "day": {
+                        "type": "string",
+                        "description": "Day of studies."
+                      },
+                      "time": {
+                        "type": "string",
+                        "description": "Time of studies."
+                      },
+                      "userIsOwner": {
+                        "type": "boolean",
+                        "description": "The User is owner classroom."
                       }
                     }
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/get/all/classroombyuser": {
+      "get": {
+        "tags": [
+          "Classroom management"
+        ],
+        "summary": "get classroom by user",
+        "description": "จะ get classroom เฉพาะที่ user นั้นได้ join หรือ create ไว้",
+        "responses": {
+          "200": {
+            "description": "A Classroom object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "description": "The Classroom description."
                 },
-                "userIsOwner": {
-                  "type": "boolean",
-                  "description": "The User is owner classroom."
+                "classrooms": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "The Classroom ID."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The Classroom name."
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "The Classroom description."
+                      },
+                      "code": {
+                        "type": "string",
+                        "description": "The Code join classroom."
+                      },
+                      "ownerId": {
+                        "type": "integer",
+                        "description": "The Classroom owner Id."
+                      },
+                      "day": {
+                        "type": "string",
+                        "description": "Day of studies."
+                      },
+                      "time": {
+                        "type": "string",
+                        "description": "Time of studies."
+                      },
+                      "userIsOwner": {
+                        "type": "boolean",
+                        "description": "The User is owner classroom."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/enter": {
+      "post": {
+        "tags": [
+          "Classroom management"
+        ],
+        "summary": "Joing classroom",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "ต้องใช้ code ของ classroom ที่ยังไม่เข้าร่วม",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
                 }
               }
             }

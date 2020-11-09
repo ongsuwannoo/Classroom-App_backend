@@ -1,6 +1,6 @@
 const db = require('./DBConfig.js');
 const config = require('./config.js');
-const { classroom } = require('./DBConfig.js');
+const { classroom, user } = require('./DBConfig.js');
 const User = db.user;
 const Classroom = db.classroom;
 
@@ -14,6 +14,26 @@ function makeCode(length) {
     return result;
 }
 
+async function classroomFormat(user, classroom) {
+    let userIsOwner = user.id == classroom.ownerId;
+    let nameOwner = await User.findByPk(classroom.ownerId).then(user => {
+        if (user.firstname && user.lastname)
+            return user.firstname + " " + user.lastname
+        else if (user.facebookName)
+            return user.facebookName
+    })
+    return {
+        userIsOwner: userIsOwner,
+        nameOwner: nameOwner
+    }
+}
+
+async function asyncForEach(array, callback) {
+    for (let index = 0; index < array.length; index++) {
+        await callback(array[index], index, array);
+    }
+}
+
 exports.create = (req, res) => {
     let playload = req.body
 
@@ -25,8 +45,8 @@ exports.create = (req, res) => {
             description: playload.description,
             code: makeCode(5),
             ownerId: user.id,
-            day:playload.day,
-            time:playload.time
+            day: playload.datetime.split(" ")[0],
+            time: playload.datetime.split(" ")[1]
         }).then(classroom => {
             user.addClassrooms(classroom).then(() => {
                 res.status(201).json({
@@ -51,15 +71,20 @@ exports.create = (req, res) => {
 exports.getAllClassroom = (req, res) => {
     User.findOne({
         where: { id: req.userId }
-    }).then(() => {
+    }).then((user) => {
         Classroom.findAll().then(classrooms => {
-            classrooms.forEach(classroom => {
-                classroom.dataValues.userIsOwner = (req.userId === classroom.ownerId)
-            });
-            res.status(200).json({
-                "description": "classrooms Content Page - ดึง classrooms สำเร็จ",
-                "classrooms": classrooms
-            });
+
+            const call = async () => {
+                await asyncForEach(classrooms, async (classroom) => {
+                    classroom.dataValues = await Object.assign(classroom.dataValues, await classroomFormat(user, classroom));
+                })
+                res.status(200).json({
+                    "description": "classrooms Content Page - ดึง classrooms สำเร็จ",
+                    "classrooms": classrooms
+                });
+            }
+            call();
+
         }).catch(err => {
             if (isNaN(req.params.classroomId)) {
                 res.status(400).json({
@@ -90,9 +115,9 @@ exports.getClassroomById = (req, res) => {
                 id: req.params.classroomId
             }
         }
-    }).then((result) => {
-        let classroom = result.classrooms[0]
-        classroom.dataValues.userIsOwner = (req.userId === classroom.ownerId)
+    }).then(async (user) => {
+        let classroom = user.classrooms[0]
+        classroom.dataValues = Object.assign(classroom.dataValues, await classroomFormat(user, classroom));
         res.status(200).send({
             "description": "Classroom Content Page - ดึง Classroom สำเร็จ",
             "classroom": classroom
@@ -147,7 +172,7 @@ exports.addUserClassroom = (req, res) => {
                 Classroom.findOne({
                     where: { code: playload.code }
                 }).then(classroom => {
-                    user.setClassrooms(classroom).then(() => {
+                    user.addClassrooms(classroom).then(() => {
                         res.status(200).json({
                             "description": "Enter classroom success! - เข้าสู่ classroom เรียบร้อยแล้ว",
                             "message": "เข้าสู่ classroom เรียบร้อยแล้ว"
@@ -167,24 +192,30 @@ exports.addUserClassroom = (req, res) => {
             "error": err
         });
     })
-
 }
 
 exports.getAllClassroomByUser = (req, res) => {
     User.findByPk(req.userId, {
-        attributes: [],
         include: {
-            model: classroom,
-            attributes: ['id', 'name', 'description', 'ownerId']
+            model: classroom
         }
-    }).then((result)=>{
-        result.classrooms.forEach(classroom => {
-            classroom.dataValues.userIsOwner = (req.userId === classroom.ownerId)
-        });
-        res.status(200).send({
-            "description": "Enter classroom success! - เข้าสู่ classroom เรียบร้อยแล้ว",
-            "message": "เข้าสู่ classroom เรียบร้อยแล้ว",
-            "classrooms" : result.classrooms
+    }).then((user) => {
+
+        const call = async () => {
+            await asyncForEach(user.classrooms, async (classroom) => {
+                classroom.dataValues = await Object.assign(classroom.dataValues, await classroomFormat(user, classroom));
+            })
+            res.status(200).json({
+                "description": "classrooms Content Page - ดึง classrooms สำเร็จ",
+                "classrooms": user.classrooms
+            });
+        }
+        call();
+
+    }).catch(err => {
+        res.status(500).json({
+            "description": "Can not access User Page - เข้าไม่ได้งับ",
+            "error": err
         });
     })
 }
