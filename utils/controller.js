@@ -9,6 +9,10 @@ const Role = db.role;
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 
+exports.img = (req, res) => {
+    res.sendFile(req.body.path_img);
+}
+
 exports.pdf = (req, res) => {
 
     let file = fs.createReadStream('./public/RDMS.pdf');
