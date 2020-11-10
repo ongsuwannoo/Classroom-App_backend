@@ -429,6 +429,113 @@
           }
         }
       }
+    },
+    "/api/classroom/{classroomId}/lesson/create": {
+      "post": {
+        "tags": [
+          "Lesson management"
+        ],
+        "summary": "Create lesson",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "classroomId",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric ID of the classroom to get"
+          },
+          {
+            "in": "formData",
+            "name": "img",
+            "type": "file",
+            "description": "The file to upload."
+          },
+          {
+            "in": "formData",
+            "name": "title",
+            "type": "string",
+            "description": "Title lesson"
+          },
+          {
+            "in": "formData",
+            "name": "description",
+            "type": "string",
+            "description": "Description lesson"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "Lesson": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "image": {
+                      "type": "string"
+                    },
+                    "classroomId": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/get/img": {
+      "get": {
+        "tags": [
+          "Other"
+        ],
+        "summary": "Get the image",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "path of image",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "path_img": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logo image in PNG format",
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "file",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "swagger": "2.0",
