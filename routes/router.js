@@ -38,7 +38,13 @@ module.exports = function (app) {
 
     // lessons
 
-    app.post('/api/classroom/:classroomId/lesson/create', upload_img.single('img'), [authJwt.verifyToken], controller_lesson.create);
+    // app.post('/api/classroom/:classroomId/lesson/create', upload_img.single('img'), [authJwt.verifyToken], controller_lesson.create);
+
+    app.post('/api/classroom/:classroomId/lesson/create', [authJwt.verifyToken], controller_lesson.create);
+
+    app.get('/api/classroom/:classroomId/lesson', [authJwt.verifyToken], controller_lesson.getAllLessonByClassroom);
+
+    app.patch('/api/classroom/:classroomId/lesson/:lessonId', [authJwt.verifyToken], controller_lesson.editLesson);
 
     //other
 

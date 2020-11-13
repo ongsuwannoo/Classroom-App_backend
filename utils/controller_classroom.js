@@ -3,6 +3,7 @@ const config = require('./config.js');
 const { classroom, user } = require('./DBConfig.js');
 const User = db.user;
 const Classroom = db.classroom;
+const Lesson = db.lesson;
 
 function makeCode(length) {
     let result = '';
@@ -48,6 +49,17 @@ exports.create = (req, res) => {
             day: playload.datetime.split(" ")[0],
             time: playload.datetime.split(" ")[1]
         }).then(classroom => {
+            for (let i = 0; i < 6; i++) {
+                Lesson.create({
+                    name: 'Lesson ' + (i + 1),
+                    classroomId: classroom.id
+                }).catch(err => {
+                    res.status(500).json({
+                        "description": "Can not create lesson Page - สร้าง lesson ไม่ได้",
+                        "error": err
+                    });
+                })
+            }
             user.addClassrooms(classroom).then(() => {
                 res.status(201).json({
                     "description": "Classroom Created - สร้าง Classroom แล้ว",

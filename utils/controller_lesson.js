@@ -2,57 +2,23 @@ const db = require('./DBConfig.js');
 const config = require('./config.js');
 const path = require("path");
 const fs = require("fs");
-const { classroom, user } = require('./DBConfig.js');
+const { classroom, user, lesson } = require('./DBConfig.js');
 const User = db.user;
 const Classroom = db.classroom;
 const Lesson = db.lesson;
-
-const handleError = (err, res) => {
-    res.status(500).send(err)
-    return;
-};
 
 exports.create = (req, res) => {
     let playload = req.body
     Classroom.findByPk(req.params.classroomId)
         .then(classroom => {
-
-            // upload file
-            let tempPath = req.file.path;
-            let targetPath = path.join(tempPath);
-
-            if (req.file.mimetype === "image/png") {
-                targetPath = targetPath + '.png';
-                fs.rename(tempPath, (targetPath + '.png'), err => {
-                    if (err) return handleError(err, res);
-                    // res.status(200).contentType("text/plain").end("File uploaded!");
-                });
-            } else if (req.file.mimetype === "image/jpeg") {
-                targetPath = targetPath + '.jpg';
-                fs.rename(tempPath, targetPath, err => {
-                    if (err) return handleError(err, res);
-                    // res.status(200).contentType("text/plain").end("File uploaded!");
-                });
-            } else {
-                fs.unlink(tempPath, err => {
-                    if (err) return handleError(err, res);
-
-                    res.status(403).contentType("text/plain").end("Only .png or .jpeg files are allowed!");
-                    return
-                });
-            }
-
-            let fullpath = path.join(__dirname, '../', targetPath);
             Lesson.create({
-                title: playload.title,
-                description: playload.description,
-                image: fullpath,
+                name: playload.name,
                 classroomId: classroom.id
-            }).then(lesson => {
+            }).then((classroom) => {
                 res.status(201).json({
-                    "description": "Lesson Created - สร้าง Lesson แล้ว",
-                    "Lesson": lesson
-                });
+                    "description": "lesson Content Page - สร้าง lesson สำเร็จ",
+                    "lessons": classroom
+                })
             }).catch(err => {
                 res.status(500).json({
                     "description": "Can not create lesson Page - สร้าง lesson ไม่ได้",
@@ -61,8 +27,61 @@ exports.create = (req, res) => {
             })
         }).catch(err => {
             res.status(500).json({
-                "description": "Can not access classroom Page - ไม่เจอ classroom",
+                "description": "Can not found classroom Page - หา classroom ไม่เจอ",
                 "error": err
             });
         })
+}
+
+exports.getAllLessonByClassroom = (req, res) => {
+    Classroom.findByPk(req.params.classroomId)
+        .then(classroom => {
+            Lesson.findAll({
+                where: { classroomId: classroom.id }
+            }).then((lessons) => {
+                if (lessons.length == 0) {
+                    res.status(404).json({
+                        "description": "lessons Content Page - ไม่เจอ lessons ของ classroom",
+                        "lessons": lessons
+                    });
+                } else {
+                    res.status(200).json({
+                        "description": "lessons Content Page - ดึง lessons สำเร็จ",
+                        "lessons": lessons
+                    });
+                }
+            }).catch(err => {
+                res.status(500).json({
+                    "description": "Can not access User Page - เข้าไม่ได้งับ",
+                    "error": err
+                });
+            })
+        }).catch(err => {
+            res.status(404).json({
+                "description": "Can not found classroom Page - ไม่เจอ classroom",
+                "error": err
+            });
+        })
+}
+
+exports.editLesson = (req, res) => {
+    let playload = req.body
+    Classroom.findByPk(req.params.classroomId, {
+        include: {
+            model: lesson,
+            where: {
+                id: req.params.lessonId
+            }
+        }
+    }).then(classroom => {
+        res.status(200).json({
+            "description": "lessons Content Page - ดึง lessons สำเร็จ",
+            "lessons": classroom
+        });
+    }).catch(err => {
+        res.status(500).json({
+            "description": "Can not found classroom Page - หา classroom ไม่เจอ",
+            "error": err
+        });
+    })
 }
