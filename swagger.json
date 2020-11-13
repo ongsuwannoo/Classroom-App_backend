@@ -29,7 +29,7 @@
                 "email": {
                   "type": "string"
                 },
-                "sid":{
+                "sid": {
                   "type": "string"
                 },
                 "roles": {
@@ -146,6 +146,10 @@
                 },
                 "description": {
                   "type": "string"
+                },
+                "datetime": {
+                  "type": "string",
+                  "description": "Day of studies."
                 }
               }
             }
@@ -204,7 +208,7 @@
                   "type": "string",
                   "description": "The Classroom description."
                 },
-                "classroom": {
+                "classrooms": {
                   "type": "object",
                   "properties": {
                     "id": {
@@ -219,36 +223,471 @@
                       "type": "string",
                       "description": "The Classroom description."
                     },
+                    "code": {
+                      "type": "string",
+                      "description": "The Code join classroom."
+                    },
                     "ownerId": {
                       "type": "integer",
                       "description": "The Classroom owner Id."
                     },
-                    "owner": {
+                    "day": {
+                      "type": "string",
+                      "description": "Day of studies."
+                    },
+                    "time": {
+                      "type": "string",
+                      "description": "Time of studies."
+                    },
+                    "user_classroom": {
                       "type": "object",
                       "properties": {
-                        "firstname": {
-                          "type": "string",
-                          "description": "The User firstname."
+                        "classroomId": {
+                          "type": "integer"
                         },
-                        "lastname": {
-                          "type": "string",
-                          "description": "The User lastname."
-                        },
-                        "email": {
-                          "type": "string",
-                          "description": "The User email."
-                        },
-                        "sid": {
-                          "type": "string",
-                          "description": "The User student."
+                        "userId": {
+                          "type": "integer"
                         }
+                      }
+                    },
+                    "userIsOwner": {
+                      "type": "boolean",
+                      "description": "The User is owner classroom."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/get/all": {
+      "get": {
+        "tags": [
+          "Classroom management"
+        ],
+        "summary": "get classroom All",
+        "responses": {
+          "200": {
+            "description": "A Classroom object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "description": "The Classroom description."
+                },
+                "classrooms": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "The Classroom ID."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The Classroom name."
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "The Classroom description."
+                      },
+                      "code": {
+                        "type": "string",
+                        "description": "The Code join classroom."
+                      },
+                      "ownerId": {
+                        "type": "integer",
+                        "description": "The Classroom owner Id."
+                      },
+                      "day": {
+                        "type": "string",
+                        "description": "Day of studies."
+                      },
+                      "time": {
+                        "type": "string",
+                        "description": "Time of studies."
+                      },
+                      "userIsOwner": {
+                        "type": "boolean",
+                        "description": "The User is owner classroom."
                       }
                     }
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/get/all/classroombyuser": {
+      "get": {
+        "tags": [
+          "Classroom management"
+        ],
+        "summary": "get classroom by user",
+        "description": "จะ get classroom เฉพาะที่ user นั้นได้ join หรือ create ไว้",
+        "responses": {
+          "200": {
+            "description": "A Classroom object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "description": "The Classroom description."
                 },
-                "userIsOwner": {
-                  "type": "boolean",
-                  "description": "The User is owner classroom."
+                "classrooms": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "The Classroom ID."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The Classroom name."
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "The Classroom description."
+                      },
+                      "code": {
+                        "type": "string",
+                        "description": "The Code join classroom."
+                      },
+                      "ownerId": {
+                        "type": "integer",
+                        "description": "The Classroom owner Id."
+                      },
+                      "day": {
+                        "type": "string",
+                        "description": "Day of studies."
+                      },
+                      "time": {
+                        "type": "string",
+                        "description": "Time of studies."
+                      },
+                      "userIsOwner": {
+                        "type": "boolean",
+                        "description": "The User is owner classroom."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/enter": {
+      "post": {
+        "tags": [
+          "Classroom management"
+        ],
+        "summary": "Joing classroom",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "ต้องใช้ code ของ classroom ที่ยังไม่เข้าร่วม",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/{classroomId}/lesson/create": {
+      "post": {
+        "tags": [
+          "Lesson management"
+        ],
+        "summary": "Create Lesson",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "classroomId",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric ID of the classroom to get"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "ต้องใช้ code ของ classroom ที่ยังไม่เข้าร่วม",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/{classroomId}/lesson": {
+      "get": {
+        "tags": [
+          "Lesson management"
+        ],
+        "summary": "get all lesson by classroom",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "classroomId",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric ID of the classroom to get"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "description": "The Lesson description."
+                },
+                "lessons": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "The lesson ID."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The lesson name."
+                      },
+                      "classroomId": {
+                        "type": "integer",
+                        "description": "The classroom ID."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/{lessonId}/post/create": {
+      "post": {
+        "tags": [
+          "Post management"
+        ],
+        "summary": "Create lesson",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lessonId",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric ID of the classroom to get"
+          },
+          {
+            "in": "formData",
+            "name": "img",
+            "type": "file",
+            "description": "The file to upload."
+          },
+          {
+            "in": "formData",
+            "name": "title",
+            "type": "string",
+            "description": "Title lesson"
+          },
+          {
+            "in": "formData",
+            "name": "description",
+            "type": "string",
+            "description": "Description lesson"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "Lesson": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "image": {
+                      "type": "string"
+                    },
+                    "classroomId": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/{lessonId}/post": {
+      "get": {
+        "tags": [
+          "Post management"
+        ],
+        "summary": "get lesson by classroom",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lessonId",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric ID of the classroom to get"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "description": "The Lesson description."
+                },
+                "lessons": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "The lesson ID."
+                      },
+                      "title": {
+                        "type": "string",
+                        "description": "The lesson title."
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "The lesson description."
+                      },
+                      "image": {
+                        "type": "string",
+                        "description": "The lesson image path."
+                      },
+                      "classroomId": {
+                        "type": "integer",
+                        "description": "The classroom ID."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/get/img": {
+      "get": {
+        "tags": [
+          "Other"
+        ],
+        "summary": "Get the image",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "path of image",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "path_img": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logo image in PNG format",
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "file",
+                  "format": "binary"
                 }
               }
             }

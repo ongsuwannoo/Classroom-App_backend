@@ -1,10 +1,14 @@
 const verifySignUp = require('./verifySignUp');
 const authJwt = require('./verifyJwtToken');
 
+const multer = require('multer');
+const upload_img = multer({ dest: './file/img/' });
+
 module.exports = function (app) {
 
     const controller = require('../utils/controller.js');
     const controller_classroom = require('../utils/controller_classroom.js');
+    const controller_lesson = require('../utils/controller_lesson.js');
 
     //user
 
@@ -32,8 +36,20 @@ module.exports = function (app) {
 
     app.get('/api/classroom/get/all/classroombyuser', [authJwt.verifyToken], controller_classroom.getAllClassroomByUser);
 
+    // lessons
+
+    // app.post('/api/classroom/:classroomId/lesson/create', upload_img.single('img'), [authJwt.verifyToken], controller_lesson.create);
+
+    app.post('/api/classroom/:classroomId/lesson/create', [authJwt.verifyToken], controller_lesson.create);
+
+    app.get('/api/classroom/:classroomId/lesson', [authJwt.verifyToken], controller_lesson.getAllLessonByClassroom);
+
+    app.patch('/api/classroom/:classroomId/lesson/:lessonId', [authJwt.verifyToken], controller_lesson.editLesson);
+
     //other
 
     app.get('/api/get/pdf', controller.pdf);
+
+    app.get('/api/get/img', controller.img);
 
 }
