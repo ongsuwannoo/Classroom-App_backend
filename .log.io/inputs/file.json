@@ -1,0 +1,22 @@
+{
+    "messageServer": {
+      "host": "127.0.0.1",
+      "port": 6689
+    },
+    "inputs": [
+      {
+        "source": "server1",
+        "stream": "app1",
+        "config": {
+          "path": "/var/logs/app1-server1.log"
+        }
+      },
+      {
+        "source": "server2",
+        "stream": "app1",
+        "config": {
+          "path": "/var/logs/app1-server2.log"
+        }
+      }
+    ]
+  }
