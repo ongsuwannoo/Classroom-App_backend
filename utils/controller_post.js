@@ -1,3 +1,13 @@
+const db = require('./DBConfig.js');
+const config = require('./config.js');
+const path = require("path");
+const fs = require("fs");
+const { classroom, user, lesson } = require('./DBConfig.js');
+const User = db.user;
+const Classroom = db.classroom;
+const Lesson = db.lesson;
+const Post = db.post;
+
 const handleError = (err, res) => {
     res.status(500).send(err)
     return;

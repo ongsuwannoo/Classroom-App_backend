@@ -46,6 +46,8 @@ module.exports = function (app) {
 
     app.patch('/api/classroom/:classroomId/lesson/:lessonId', [authJwt.verifyToken], controller_lesson.editLesson);
 
+    app.delete('/api/classroom/:classroomId/lesson/:lessonId', [authJwt.verifyToken], controller_lesson.deleteLesson);
+
     //other
 
     app.get('/api/get/pdf', controller.pdf);

@@ -93,24 +93,28 @@ exports.editLesson = (req, res) => {
     })
 }
 
-// exports.deleteLesson = (req, res) => {
-//     let playload = req.body
-//     Classroom.findByPk(req.params.classroomId, {
-//         include: {
-//             model: lesson,
-//             where: {
-//                 id: req.params.lessonId
-//             }
-//         }
-//     }).then(classroom => {
-//         res.status(200).json({
-//             "description": "lessons Content Page - ดึง lessons สำเร็จ",
-//             "lessons": classroom
-//         });
-//     }).catch(err => {
-//         res.status(500).json({
-//             "description": "Can not found classroom Page - หา classroom ไม่เจอ",
-//             "error": err
-//         });
-//     })
-// }
+exports.deleteLesson = (req, res) => {
+    let playload = req.body
+    Lesson.findOne({
+        where: {
+            id: req.params.lessonId,
+            classroomId: req.params.classroomId
+        }
+    }).then(lesson => {
+        lesson.destroy().then(() => {
+                res.status(200).json({
+                    "description": "lessons Content Page - ลบ lessons สำเร็จ"
+                })
+            }).catch(err => {
+                res.status(500).json({
+                    "description": "Can not edit lesson Page - ลบไมได้",
+                    "error": err
+                });
+            })
+    }).catch(err => {
+        res.status(500).json({
+            "description": "Can not found classroom Page - หา classroom ไม่เจอ",
+            "error": err
+        });
+    })
+}

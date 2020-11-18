@@ -393,11 +393,11 @@
           "Classroom management"
         ],
         "summary": "Joing classroom",
+        "description": "ต้องใช้ code ของ classroom ที่ยังไม่เข้าร่วม",
         "parameters": [
           {
             "in": "body",
             "name": "body",
-            "description": "ต้องใช้ code ของ classroom ที่ยังไม่เข้าร่วม",
             "schema": {
               "type": "object",
               "properties": {
@@ -443,7 +443,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "ต้องใช้ code ของ classroom ที่ยังไม่เข้าร่วม",
+            "description": "สร้าง lesson ของ classroom ID นั้น",
             "schema": {
               "type": "object",
               "properties": {
@@ -519,6 +519,112 @@
                       }
                     }
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/{classroomId}/lesson/{lessonId}": {
+      "patch": {
+        "tags": [
+          "Lesson management"
+        ],
+        "summary": "Create lesson",
+        "description": "แก้ไขชื่อของ lesson ตาม classroom ID และ lesson ID นั้น",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lessonId",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric ID of the classroom to get"
+          },
+          {
+            "in": "path",
+            "name": "classroomId",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric ID of the classroom to get"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "Lesson": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "image": {
+                      "type": "string"
+                    },
+                    "classroomId": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Lesson management"
+        ],
+        "summary": "Create lesson",
+        "description": "ลบ lesson ตาม classroom ID และ lesson ID นั้น",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lessonId",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric ID of the classroom to get"
+          },
+          {
+            "in": "path",
+            "name": "classroomId",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric ID of the classroom to get"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
                 }
               }
             }
@@ -652,42 +758,6 @@
                       }
                     }
                   }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/get/img": {
-      "get": {
-        "tags": [
-          "Other"
-        ],
-        "summary": "Get the image",
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "path of image",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "path_img": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Logo image in PNG format",
-            "content": {
-              "image/png": {
-                "schema": {
-                  "type": "file",
-                  "format": "binary"
                 }
               }
             }
