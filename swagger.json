@@ -632,12 +632,12 @@
         }
       }
     },
-    "/api/classroom/{lessonId}/post/create": {
+    "/api/classroom/{classroomId}/lesson/{lessonId}/post": {
       "post": {
         "tags": [
           "Post management"
         ],
-        "summary": "Create lesson",
+        "summary": "Create Post",
         "consumes": [
           "multipart/form-data"
         ],
@@ -645,6 +645,13 @@
           {
             "in": "path",
             "name": "lessonId",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric ID of the lesson to get"
+          },
+          {
+            "in": "path",
+            "name": "classroomId",
             "type": "integer",
             "required": true,
             "description": "Numeric ID of the classroom to get"
@@ -677,7 +684,7 @@
                 "description": {
                   "type": "string"
                 },
-                "Lesson": {
+                "Post": {
                   "type": "object",
                   "properties": {
                     "id": {
@@ -691,9 +698,6 @@
                     },
                     "image": {
                       "type": "string"
-                    },
-                    "classroomId": {
-                      "type": "integer"
                     }
                   }
                 }
@@ -701,21 +705,23 @@
             }
           }
         }
-      }
-    },
-    "/api/classroom/{lessonId}/post": {
+      },
       "get": {
         "tags": [
           "Post management"
         ],
-        "summary": "get lesson by classroom",
-        "consumes": [
-          "multipart/form-data"
-        ],
+        "summary": "Get Post",
         "parameters": [
           {
             "in": "path",
             "name": "lessonId",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric ID of the lesson to get"
+          },
+          {
+            "in": "path",
+            "name": "classroomId",
             "type": "integer",
             "required": true,
             "description": "Numeric ID of the classroom to get"
@@ -731,30 +737,167 @@
                   "type": "string",
                   "description": "The Lesson description."
                 },
-                "lessons": {
+                "Post": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The lesson ID."
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "The lesson title."
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "The lesson description."
+                    },
+                    "image": {
+                      "type": "string",
+                      "description": "The lesson image path."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/classroom/{classroomId}/lesson/{lessonId}/post/{postId}/comment": {
+      "post": {
+        "tags": [
+          "Comment management"
+        ],
+        "summary": "Create Comment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lessonId",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric ID of the lesson to get"
+          },
+          {
+            "in": "path",
+            "name": "classroomId",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric ID of the classroom to get"
+          },
+          {
+            "in": "path",
+            "name": "postId",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric ID of the post to get"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "Comment": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The comment ID."
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "The comment description."
+                    },
+                    "userId": {
+                      "type": "integer",
+                      "description": "The Owner comment userId."
+                    },
+                    "postId": {
+                      "type": "integer",
+                      "description": "The Post ID has comment."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Comment management"
+        ],
+        "summary": "Get comment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lessonId",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric ID of the lesson to get"
+          },
+          {
+            "in": "path",
+            "name": "classroomId",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric ID of the classroom to get"
+          },
+          {
+            "in": "path",
+            "name": "postId",
+            "type": "integer",
+            "required": true,
+            "description": "Numeric ID of the post to get"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "description": "The Lesson description."
+                },
+                "Comments": {
                   "type": "array",
                   "items": {
                     "type": "object",
                     "properties": {
                       "id": {
                         "type": "integer",
-                        "description": "The lesson ID."
-                      },
-                      "title": {
-                        "type": "string",
-                        "description": "The lesson title."
+                        "description": "The comment ID."
                       },
                       "description": {
                         "type": "string",
-                        "description": "The lesson description."
+                        "description": "The comment description."
                       },
-                      "image": {
-                        "type": "string",
-                        "description": "The lesson image path."
-                      },
-                      "classroomId": {
+                      "userId": {
                         "type": "integer",
-                        "description": "The classroom ID."
+                        "description": "The Owner comment userId."
+                      },
+                      "postId": {
+                        "type": "integer",
+                        "description": "The Post ID has comment."
                       }
                     }
                   }

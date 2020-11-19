@@ -37,7 +37,7 @@ exports.getAllLessonByClassroom = (req, res) => {
     Classroom.findByPk(req.params.classroomId)
         .then(classroom => {
             Lesson.findAll({
-                where: { classroomId: classroom.id }
+                where: { classroomId: classroom.id },
             }).then((lessons) => {
                 if (lessons.length == 0) {
                     res.status(404).json({
@@ -74,16 +74,16 @@ exports.editLesson = (req, res) => {
     }).then(lesson => {
         lesson.name = playload.name;
         lesson.save().then((lesson) => {
-                res.status(200).json({
-                    "description": "lessons Content Page - แก้ lessons สำเร็จ",
-                    "lesson": lesson
-                })
-            }).catch(err => {
-                res.status(500).json({
-                    "description": "Can not edit lesson Page - แก้ไมได้",
-                    "error": err
-                });
+            res.status(200).json({
+                "description": "lessons Content Page - แก้ lessons สำเร็จ",
+                "lesson": lesson
             })
+        }).catch(err => {
+            res.status(500).json({
+                "description": "Can not edit lesson Page - แก้ไมได้",
+                "error": err
+            });
+        })
 
     }).catch(err => {
         res.status(500).json({
@@ -102,15 +102,15 @@ exports.deleteLesson = (req, res) => {
         }
     }).then(lesson => {
         lesson.destroy().then(() => {
-                res.status(200).json({
-                    "description": "lessons Content Page - ลบ lessons สำเร็จ"
-                })
-            }).catch(err => {
-                res.status(500).json({
-                    "description": "Can not edit lesson Page - ลบไมได้",
-                    "error": err
-                });
+            res.status(200).json({
+                "description": "lessons Content Page - ลบ lessons สำเร็จ"
             })
+        }).catch(err => {
+            res.status(500).json({
+                "description": "Can not edit lesson Page - ลบไมได้",
+                "error": err
+            });
+        })
     }).catch(err => {
         res.status(500).json({
             "description": "Can not found classroom Page - หา classroom ไม่เจอ",

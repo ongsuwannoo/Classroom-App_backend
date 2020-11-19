@@ -15,6 +15,8 @@ db.user = require('../Models/user.model.js')(sequelize, Sequelize);
 db.role = require('../Models/role.model.js')(sequelize, Sequelize);
 db.classroom = require('../Models/classroom.model.js')(sequelize, Sequelize);
 db.lesson = require('../Models/lesson.model.js')(sequelize, Sequelize);
+db.post = require('../Models/post.model.js')(sequelize, Sequelize);
+db.comment = require('../Models/comment.model.js')(sequelize, Sequelize);
 
 db.role.belongsToMany(db.user, { through: 'user_roles', foreignKey: 'roleId', otherKey: 'userId' });
 db.user.belongsToMany(db.role, { through: 'user_roles', foreignKey: 'userId', otherKey: 'roleId' });
@@ -24,5 +26,14 @@ db.user.belongsToMany(db.classroom, { through: 'user_classroom', foreignKey: 'us
 
 db.classroom.hasMany(db.lesson, { as: "lessons" });
 db.lesson.belongsTo(db.classroom, { foreignKey: "classroomId", as: "classroom" });
+
+db.post.hasOne(db.lesson);
+db.lesson.belongsTo(db.post, { foreignKey: 'postId', as: "post" });
+
+db.post.hasMany(db.comment, { as: "comments" });
+db.comment.belongsTo(db.post, { foreignKey: "postId", as: "post" });
+
+db.user.hasMany(db.comment, { as: "comments" });
+db.comment.belongsTo(db.user, { foreignKey: "userId", as: "user" });
 
 module.exports = db;

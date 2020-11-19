@@ -3,17 +3,17 @@ module.exports = (sequelize, Sequelize) => {
 
         title: {
             type: Sequelize.STRING,
-            field: 'Title Lesson',
+            field: 'Post title',
         },
         description: {
             type: Sequelize.TEXT,
-            field: 'Lesson description',
+            field: 'Post description',
         },
         image: {
             type: Sequelize.STRING,
-            field: 'Lesson image'
+            field: 'Post image'
         }
     });
 
-    return Lesson;
+    return Post;
 }

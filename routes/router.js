@@ -9,6 +9,8 @@ module.exports = function (app) {
     const controller = require('../utils/controller.js');
     const controller_classroom = require('../utils/controller_classroom.js');
     const controller_lesson = require('../utils/controller_lesson.js');
+    const controller_post = require('../utils/controller_post.js');
+    const controller_comment = require('../utils/controller_comment.js');
 
     //user
 
@@ -38,8 +40,6 @@ module.exports = function (app) {
 
     // lessons
 
-    // app.post('/api/classroom/:classroomId/lesson/create', upload_img.single('img'), [authJwt.verifyToken], controller_lesson.create);
-
     app.post('/api/classroom/:classroomId/lesson/create', [authJwt.verifyToken], controller_lesson.create);
 
     app.get('/api/classroom/:classroomId/lesson', [authJwt.verifyToken], controller_lesson.getAllLessonByClassroom);
@@ -47,6 +47,18 @@ module.exports = function (app) {
     app.patch('/api/classroom/:classroomId/lesson/:lessonId', [authJwt.verifyToken], controller_lesson.editLesson);
 
     app.delete('/api/classroom/:classroomId/lesson/:lessonId', [authJwt.verifyToken], controller_lesson.deleteLesson);
+
+    //post
+
+    app.post('/api/classroom/:classroomId/lesson/:lessonId/post', [authJwt.verifyToken], upload_img.single('img'), controller_post.create);
+
+    app.get('/api/classroom/:classroomId/lesson/:lessonId/post', [authJwt.verifyToken], controller_post.getPost);
+
+    //comment
+
+    app.post('/api/classroom/:classroomId/lesson/:lessonId/post/:postId/comment', [authJwt.verifyToken], controller_comment.create);
+
+    app.get('/api/classroom/:classroomId/lesson/:lessonId/post/:postId/comment', [authJwt.verifyToken], controller_comment.getAllCommentByPostId);
 
     //other
 
