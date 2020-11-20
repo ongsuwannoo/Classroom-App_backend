@@ -14,6 +14,7 @@ const handleError = (err, res) => {
 };
 
 exports.create = (req, res) => {
+    console.log("CREATE POST")
     let payload = req.body
     Lesson.findOne({
         where: {
