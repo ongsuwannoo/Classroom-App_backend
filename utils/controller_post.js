@@ -14,7 +14,6 @@ const handleError = (err, res) => {
 };
 
 exports.create = (req, res) => {
-    console.log("CREATE POST")
     let payload = req.body
     Lesson.findOne({
         where: {
@@ -83,8 +82,14 @@ exports.create = (req, res) => {
 
 exports.getPost = (req, res) => {
     let payload = req.body;
-    Lesson.findByPk(req.params.lessonId).then(lesson => {
-        Post.findByPk(lesson.postId).then(post => {
+    Lesson.findOne({
+        where: { id: req.params.lessonId },
+        rejectOnEmpty: true
+    }).then(lesson => {
+        Post.findOne({
+            where: { id: lesson.postId },
+            rejectOnEmpty: true
+        }).then(post => {
             res.status(200).json({
                 "description": "Post Content Page - ดึง Post แล้ว",
                 "Post": post
