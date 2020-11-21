@@ -907,6 +907,40 @@
           }
         }
       }
+    },
+    "/api/get/img": {
+      "get": {
+        "tags": [
+          "Other"
+        ],
+        "summary": "get image",
+        "produces": [
+          "image/png",
+          "image/jpeg"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "path_img": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "file"
+            }
+          }
+        }
+      }
     }
   },
   "swagger": "2.0",

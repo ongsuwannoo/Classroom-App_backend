@@ -10,7 +10,7 @@ var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 
 exports.img = (req, res) => {
-    res.sendFile(req.body.path_img);
+    res.sendFile('/home/django/express/Classroom-App_backend/file/img/' + req.params.img);
 }
 
 exports.pdf = (req, res) => {
@@ -46,6 +46,23 @@ exports.signup = (req, res) => {
             });
         }).catch(err => {
             res.status(500).send("Error -> " + err);
+        });
+    }).catch(err => {
+        res.status(500).send("Fail! Error -> " + err);
+    })
+}
+
+exports.editUser = (req, res) => {
+    let playload = req.body
+    User.findByPk(req.userId).then(user => {
+        user.update({
+            firstname: playload.firstname
+        })
+        user.save().then(() => {
+            res.status(200).json({
+                "description": "User Content Page - Update user เรียบร้อย",
+                "user": user
+            });
         });
     }).catch(err => {
         res.status(500).send("Fail! Error -> " + err);

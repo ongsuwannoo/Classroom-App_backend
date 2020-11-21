@@ -64,6 +64,6 @@ module.exports = function (app) {
 
     app.get('/api/get/pdf', controller.pdf);
 
-    app.get('/api/get/img', controller.img);
+    app.get('/home/django/express/Classroom-App_backend/file/img/:img', controller.img);
 
 }

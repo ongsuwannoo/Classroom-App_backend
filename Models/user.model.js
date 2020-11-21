@@ -17,6 +17,10 @@ module.exports = (sequelize, Sequelize) => {
             field: 'Email',
             allowNull: false
         },
+        img: {
+            type: Sequelize.STRING,
+            field: 'Image',
+        },
         password: {
             type: Sequelize.STRING,
             field: 'Password'
