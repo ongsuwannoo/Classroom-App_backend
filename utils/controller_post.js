@@ -1,17 +1,12 @@
 const db = require('./DBConfig.js');
 const config = require('./config.js');
-const path = require("path");
-const fs = require("fs");
 const { classroom, user, lesson } = require('./DBConfig.js');
 const User = db.user;
 const Classroom = db.classroom;
 const Lesson = db.lesson;
 const Post = db.post;
-
-const handleError = (err, res) => {
-    res.status(500).send(err)
-    return;
-};
+const { postFromat } = require('./function/post.function');
+const { uploadFile } = require('./function/uploadFile.function');
 
 exports.create = (req, res) => {
     let payload = req.body
@@ -22,32 +17,8 @@ exports.create = (req, res) => {
         }
     }).then(lesson => {
 
-        // upload file
-        let tempPath = req.file.path;
-        let targetPath = path.join(tempPath);
+        let fullpath = uploadFile(req)
 
-        if (req.file.mimetype === "image/png") {
-            targetPath = targetPath + '.png';
-            fs.rename(tempPath, (targetPath + '.png'), err => {
-                if (err) return handleError(err, res);
-                // res.status(200).contentType("text/plain").end("File uploaded!");
-            });
-        } else if (req.file.mimetype === "image/jpeg") {
-            targetPath = targetPath + '.jpg';
-            fs.rename(tempPath, targetPath, err => {
-                if (err) return handleError(err, res);
-                // res.status(200).contentType("text/plain").end("File uploaded!");
-            });
-        } else {
-            fs.unlink(tempPath, err => {
-                if (err) return handleError(err, res);
-
-                res.status(403).contentType("text/plain").end("Only .png or .jpeg files are allowed!");
-                return
-            });
-        }
-
-        let fullpath = path.join(__dirname, '../', targetPath);
         Post.create({
             title: payload.title,
             description: payload.description,
@@ -90,10 +61,17 @@ exports.getPost = (req, res) => {
             where: { id: lesson.postId },
             rejectOnEmpty: true
         }).then(post => {
-            res.status(200).json({
-                "description": "Post Content Page - ดึง Post แล้ว",
-                "Post": post
-            });
+
+            const call = async () => {
+                post.dataValues = await Object.assign(post.dataValues, await postFromat(req.params.classroomId));
+
+                res.status(200).json({
+                    "description": "Post Content Page - ดึง Post แล้ว",
+                    "Post": post
+                });
+            }
+            call();
+
         }).catch(err => {
             res.status(500).json({
                 "description": "Can not access Post Content Page - ดึง Post ไม่ได้",

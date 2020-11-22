@@ -1,16 +1,31 @@
 const db = require('./DBConfig.js');
 const config = require('./config.js');
-const fs = require('fs');
+const path = require("path");
+const fs = require("fs");
+const fetch = require('node-fetch');
 const User = db.user;
 const Role = db.role;
+const { uploadFile } = require('./function/uploadFile.function');
 
 // const Op = db.Sequelize.Op;
 
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 
+async function download(url, imgName) {
+    imgName = imgName.replace(/\s/g, '');
+    const response = await fetch(url);
+    const buffer = await response.buffer();
+    fs.writeFile('./file/img/profile/' + imgName + '.jpg', buffer, () => { })
+    return '/home/django/express/Classroom-App_backend/file/img/profile/' + imgName + '.jpg';
+}
+
 exports.img = (req, res) => {
-    res.sendFile('/home/django/express/Classroom-App_backend/file/img/' + req.params.img);
+    res.sendFile('/home/django/express/Classroom-App_backend/file/img/' + req.params.img)
+}
+
+exports.imgProfile = (req, res) => {
+    res.sendFile('/home/django/express/Classroom-App_backend/file/img/profile/' + req.params.img)
 }
 
 exports.pdf = (req, res) => {
@@ -54,9 +69,18 @@ exports.signup = (req, res) => {
 
 exports.editUser = (req, res) => {
     let playload = req.body
-    User.findByPk(req.userId).then(user => {
+
+    let fullpath = uploadFile(req);
+
+    User.findByPk(req.userId, {
+        attributes: ['username', 'firstname', 'lastname', 'email', 'fid', 'facebookName', 'img', 'sid'],
+    }).then(user => {
         user.update({
-            firstname: playload.firstname
+            firstname: playload.firstname || user.firstname,
+            lastname: playload.lastname || user.lastname,
+            email: playload.email || user.email,
+            sid: playload.sid || user.sid,
+            img: fullpath
         })
         user.save().then(() => {
             res.status(200).json({
@@ -101,6 +125,7 @@ exports.signin = (req, res) => {
 
 exports.authFacebook = (req, res) => {
     let playload = req.body
+
     playload.roles = "student"
 
     console.log("FB Sign-in")
@@ -123,12 +148,14 @@ exports.authFacebook = (req, res) => {
         where: {
             email: playload.email
         }
-    }).then(user => {
+    }).then(async (user) => {
+        let urlImg = await download(playload.picture.data.url, playload.name)
         if (!user) {
             User.create({
                 facebookName: playload.name,
                 fid: playload.id,
                 email: playload.email,
+                img: urlImg
             }).then(userCreate => {
                 Role.findOne({
                     where: {
@@ -146,6 +173,10 @@ exports.authFacebook = (req, res) => {
                 res.status(500).send("Fail! Error -> " + err);
             })
         } else {
+            user.update({
+                img: urlImg
+            })
+            user.save()
             createToken(user)
         }
     });

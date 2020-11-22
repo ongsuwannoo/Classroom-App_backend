@@ -1,52 +1,24 @@
 const db = require('./DBConfig.js');
 const config = require('./config.js');
-const { classroom, user } = require('./DBConfig.js');
 const User = db.user;
+const { classroom, user } = require('./DBConfig.js');
 const Classroom = db.classroom;
 const Lesson = db.lesson;
-
-function makeCode(length) {
-    let result = '';
-    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-}
-
-async function classroomFormat(user, classroom) {
-    let userIsOwner = user.id == classroom.ownerId;
-    let userOwner = await User.findByPk(classroom.ownerId,{
-        attributes: ['username', 'firstname', 'lastname', 'email', 'facebookName', 'img']
-    }).then(user => {
-        return user;
-    })
-    return {
-        userIsOwner: userIsOwner,
-        userOwner: userOwner
-    }
-}
-
-async function asyncForEach(array, callback) {
-    for (let index = 0; index < array.length; index++) {
-        await callback(array[index], index, array);
-    }
-}
+const { classroomFormat, asyncForEach, makeCode } = require('./function/classroom.function');
 
 exports.create = (req, res) => {
-    let playload = req.body
+    let payload = req.body
 
     User.findOne({
         where: { id: req.userId }
     }).then(user => {
         Classroom.create({
-            name: playload.name,
-            description: playload.description,
+            name: payload.name,
+            description: payload.description,
             code: makeCode(5),
             ownerId: user.id,
-            day: playload.datetime.split(" ")[0],
-            time: playload.datetime.split(" ")[1]
+            day: payload.datetime.split(" ")[0],
+            time: payload.datetime.split(" ")[1]
         }).then(classroom => {
             for (let i = 0; i < 6; i++) {
                 Lesson.create({
@@ -158,13 +130,13 @@ exports.getClassroomById = (req, res) => {
 }
 
 exports.addUserClassroom = (req, res) => {
-    let playload = req.body
+    let payload = req.body
 
     User.findOne({
         where: { id: req.userId, },
         include: {
             model: classroom,
-            where: { code: playload.code }
+            where: { code: payload.code }
         },
         rejectOnEmpty: true
     }).then((user) => {
@@ -181,7 +153,7 @@ exports.addUserClassroom = (req, res) => {
                 where: { id: req.userId }
             }).then(user => {
                 Classroom.findOne({
-                    where: { code: playload.code }
+                    where: { code: payload.code }
                 }).then(classroom => {
                     user.addClassrooms(classroom).then(() => {
                         res.status(200).json({
@@ -228,5 +200,24 @@ exports.getAllClassroomByUser = (req, res) => {
             "description": "Can not access User Page - เข้าไม่ได้งับ",
             "error": err
         });
+    })
+}
+
+exports.editClassroom = (req, res) => {
+    let payload = req.body;
+    Classroom.findByPk(req.params.classroomId).then(classroom => {
+        classroom.update({
+            name: payload.name,
+            description: payload.description,
+            ownerId: user.id,
+            day: payload.datetime.split(" ")[0],
+            time: payload.datetime.split(" ")[1]
+        })
+        classroom.save().then(() => {
+            res.status(200).json({
+                "description": "classrooms update success!! - ดึง classrooms สำเร็จ",
+                "classrooms": classroom
+            });
+        })
     })
 }

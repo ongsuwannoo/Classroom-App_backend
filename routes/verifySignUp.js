@@ -51,7 +51,7 @@ checkDuplicateEmail = (req, res, next) => {
         }
     }).then(user => {
 
-        if (user && (!user.fid)) {
+        if (user && (!user.id)) {
             res.status(400).send({
                 "description": "Fail -> Email is already in use! - มีคนแย่ง email ไปแล้วว",
                 "checkDuplicateEmail": true

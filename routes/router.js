@@ -3,6 +3,7 @@ const authJwt = require('./verifyJwtToken');
 
 const multer = require('multer');
 const upload_img = multer({ dest: './file/img/' });
+const upload_img_profile = multer({ dest: './file/img/profile' });
 
 module.exports = function (app) {
 
@@ -18,9 +19,11 @@ module.exports = function (app) {
 
     app.post('/api/auth/signin', controller.signin);
 
-    app.post('/api/auth/facebook', [verifySignUp.checkDuplicateEmail], controller.authFacebook);
+    app.post('/api/auth/facebook', controller.authFacebook);
 
     app.get('/api/test/user', [authJwt.verifyToken], controller.userContent);
+
+    app.patch('/api/user/edituser', [authJwt.verifyToken], upload_img_profile.single('img'), controller.editUser);
 
     app.post('/api/test/sid', verifySignUp.checkStudentId);
 
@@ -37,6 +40,8 @@ module.exports = function (app) {
     app.post('/api/classroom/enter', [authJwt.verifyToken], controller_classroom.addUserClassroom);
 
     app.get('/api/classroom/get/all/classroombyuser', [authJwt.verifyToken], controller_classroom.getAllClassroomByUser);
+
+    app.patch('/api/classroom/editclassrom/:classroomId', [authJwt.verifyToken], controller_classroom.editClassroom);
 
     // lessons
 
@@ -65,5 +70,7 @@ module.exports = function (app) {
     app.get('/api/get/pdf', controller.pdf);
 
     app.get('/home/django/express/Classroom-App_backend/file/img/:img', controller.img);
+
+    app.get('/home/django/express/Classroom-App_backend/file/img/profile/:img', controller.imgProfile);
 
 }
