@@ -154,7 +154,7 @@ exports.authFacebook = (req, res) => {
 exports.userContent = (req, res) => {
     User.findOne({
         where: { id: req.userId },
-        attributes: ['username', 'firstname', 'lastname', 'email', 'fid', 'facebookName'],
+        attributes: ['username', 'firstname', 'lastname', 'email', 'fid', 'facebookName', 'img'],
         include: [{
             model: Role,
             attributes: ['id', 'name'],
@@ -163,7 +163,7 @@ exports.userContent = (req, res) => {
             }
         }]
     }).then(user => {
-        console.log("User check : " + user.username, new Date().toLocaleTimeString())
+        console.log("User check : " + (user.username || user.facebookName), new Date().toLocaleTimeString())
         res.status(200).json({
             "description": "User Content Page - Token นี้สามารถใช้ได้",
             "user": user

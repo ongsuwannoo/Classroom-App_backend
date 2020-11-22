@@ -17,15 +17,14 @@ function makeCode(length) {
 
 async function classroomFormat(user, classroom) {
     let userIsOwner = user.id == classroom.ownerId;
-    let nameOwner = await User.findByPk(classroom.ownerId).then(user => {
-        if (user.firstname && user.lastname)
-            return user.firstname + " " + user.lastname
-        else if (user.facebookName)
-            return user.facebookName
+    let userOwner = await User.findByPk(classroom.ownerId,{
+        attributes: ['username', 'firstname', 'lastname', 'email', 'facebookName', 'img']
+    }).then(user => {
+        return user;
     })
     return {
         userIsOwner: userIsOwner,
-        nameOwner: nameOwner
+        userOwner: userOwner
     }
 }
 
