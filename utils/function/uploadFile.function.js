@@ -12,14 +12,16 @@ exports.uploadFile = (req) => {
 
     if (req.file.mimetype === "image/png") {
         targetPath = targetPath + '.png';
-        fs.rename(tempPath, (targetPath + '.png'), err => {
+        fs.rename(tempPath, targetPath, err => {
             if (err) return handleError(err, res);
+            console.log("File uploaded!")
             // res.status(200).contentType("text/plain").end("File uploaded!");
         });
     } else if (req.file.mimetype === "image/jpeg") {
         targetPath = targetPath + '.jpg';
         fs.rename(tempPath, targetPath, err => {
             if (err) return handleError(err, res);
+            console.log("File uploaded!")
             // res.status(200).contentType("text/plain").end("File uploaded!");
         });
     } else {
@@ -31,5 +33,5 @@ exports.uploadFile = (req) => {
         });
     }
 
-    return path.join(__dirname, '../', targetPath);
+    return path.join(__dirname, '../../', targetPath);
 }

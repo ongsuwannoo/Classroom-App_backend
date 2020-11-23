@@ -6,6 +6,63 @@ const Classroom = db.classroom;
 const Lesson = db.lesson;
 const { classroomFormat, asyncForEach, makeCode } = require('./function/classroom.function');
 
+const PubNub = require('pubnub');
+
+const pubnub = new PubNub({
+    publishKey: "pub-c-d0ea43cd-e94b-46e2-9f75-00e9e6a658b2",
+    subscribeKey: "sub-c-6a62607c-2d9b-11eb-ae78-c6faad964e01",
+    uuid: "sec-c-MjE2MmVmMTgtMTZlYy00ZTE4LWE3MzYtYjZjNjIxOTVjZmEz",
+});
+
+async function publishSampleMessage() {
+    console.log(
+        "Since we're publishing on subscribe connectEvent, we're sure we'll receive the following publish."
+    );
+    // const result = await pubnub.publish({
+    //     channel: "Classroom02",
+    //     message: {
+    //         title: "greeting",
+    //         description: "hello world!",
+    //     },
+    // });
+    // console.log(result);
+}
+
+pubnub.addListener({
+    status: function (statusEvent) {
+        if (statusEvent.category === "PNConnectedCategory") {
+            publishSampleMessage();
+        }
+    },
+    message: function (messageEvent) {
+        console.log('channel: ', messageEvent.channel);
+        console.log('message: ', messageEvent.message.description);
+    },
+    presence: function (presenceEvent) {
+        // handle presence
+    },
+});
+
+console.log("Subscribing..");
+
+pubnub.subscribe({
+    channels: ["Classroom01", "Classroom02", "Classroom03"],
+});
+
+exports.chatClassroom = async (req, res) => {
+    let payload = req.body
+    const result = await pubnub.publish({
+        channel: "Classroom0" + req.params.classroomId,
+        message: {
+            title: "greeting",
+            description: payload.text,
+        },
+    });
+    res.status(200).json({
+        "description": "Chat",
+    });
+}
+
 exports.create = (req, res) => {
     let payload = req.body
 

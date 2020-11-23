@@ -68,21 +68,23 @@ exports.signup = (req, res) => {
 }
 
 exports.editUser = (req, res) => {
+    let fullpath;
+    if (req.file){
+        fullpath = uploadFile(req);
+    }
+
     let playload = req.body
 
-    let fullpath = uploadFile(req);
+    User.findByPk(req.userId).then(user => {
+        user.firstname = playload.firstname || user.firstname
+        user.lastname = playload.lastname || user.lastname
+        user.email = playload.email || user.email
+        user.sid = playload.sid || user.sid
+        user.img = fullpath || user.img
 
-    User.findByPk(req.userId, {
-        attributes: ['username', 'firstname', 'lastname', 'email', 'fid', 'facebookName', 'img', 'sid'],
-    }).then(user => {
-        user.update({
-            firstname: playload.firstname || user.firstname,
-            lastname: playload.lastname || user.lastname,
-            email: playload.email || user.email,
-            sid: playload.sid || user.sid,
-            img: fullpath
-        })
-        user.save().then(() => {
+        user.save({
+            attributes: ['username', 'firstname', 'lastname', 'email', 'fid', 'facebookName', 'img', 'sid'],
+        }).then(user => {
             res.status(200).json({
                 "description": "User Content Page - Update user เรียบร้อย",
                 "user": user

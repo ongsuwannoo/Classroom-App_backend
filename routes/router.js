@@ -3,7 +3,7 @@ const authJwt = require('./verifyJwtToken');
 
 const multer = require('multer');
 const upload_img = multer({ dest: './file/img/' });
-const upload_img_profile = multer({ dest: './file/img/profile' });
+const upload_img_profile = multer({ dest: './file/img/profile/' });
 
 module.exports = function (app) {
 
@@ -72,5 +72,7 @@ module.exports = function (app) {
     app.get('/home/django/express/Classroom-App_backend/file/img/:img', controller.img);
 
     app.get('/home/django/express/Classroom-App_backend/file/img/profile/:img', controller.imgProfile);
+
+    app.post('/api/classroom/:classroomId/chat/', controller_classroom.chatClassroom);
 
 }
