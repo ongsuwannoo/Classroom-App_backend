@@ -4,6 +4,7 @@ const User = db.user;
 const { classroom, user } = require('./DBConfig.js');
 const Classroom = db.classroom;
 const Lesson = db.lesson;
+const Chat = db.chat;
 const { classroomFormat, asyncForEach, makeCode } = require('./function/classroom.function');
 
 const PubNub = require('pubnub');
@@ -14,24 +15,10 @@ const pubnub = new PubNub({
     uuid: "sec-c-MjE2MmVmMTgtMTZlYy00ZTE4LWE3MzYtYjZjNjIxOTVjZmEz",
 });
 
-async function publishSampleMessage() {
-    console.log(
-        "Since we're publishing on subscribe connectEvent, we're sure we'll receive the following publish."
-    );
-    // const result = await pubnub.publish({
-    //     channel: "Classroom02",
-    //     message: {
-    //         title: "greeting",
-    //         description: "hello world!",
-    //     },
-    // });
-    // console.log(result);
-}
-
 pubnub.addListener({
     status: function (statusEvent) {
         if (statusEvent.category === "PNConnectedCategory") {
-            publishSampleMessage();
+            // publishSampleMessage();
         }
     },
     message: function (messageEvent) {
@@ -43,24 +30,71 @@ pubnub.addListener({
     },
 });
 
-console.log("Subscribing..");
-
 pubnub.subscribe({
     channels: ["Classroom01", "Classroom02", "Classroom03"],
 });
 
-exports.chatClassroom = async (req, res) => {
+exports.getAllChatByCllassroom = (req, res) => {
+    Chat.findAll({
+        where: { classroomId: req.params.classroomId }
+    }).then(chats => {
+        res.status(200).json({
+            "description": "Chat ของ classroom นี้",
+            "chats": chats
+        });
+    }).catch(err => {
+        res.status(500).json({
+            "description": "ดึง chat ไม่ได้",
+            "error": err
+        });
+    })
+}
+
+exports.chatClassroom = (req, res) => {
     let payload = req.body
-    const result = await pubnub.publish({
-        channel: "Classroom0" + req.params.classroomId,
-        message: {
-            title: "greeting",
-            description: payload.text,
-        },
-    });
-    res.status(200).json({
-        "description": "Chat",
-    });
+
+    User.findOne({
+        where: { id: req.userId }
+    }).then(user => {
+        let nameOfuser;
+        if (user.firstname && user.lastname)
+            nameOfuser = user.firstname + " " + user.lastname
+        else if (user.facebookName)
+            nameOfuser = user.facebookName
+        Classroom.findOne({
+            where: { id: req.params.classroomId }
+        }).then(async classroom => {
+            Chat.create({
+                text: payload.text,
+                ownerId: user.id,
+                classroomId: classroom.id
+            })
+            await pubnub.publish({
+                channel: "Classroom01",
+                message: {
+                    code: makeCode(3),
+                    description: payload.text,
+                    from: nameOfuser
+                },
+            })
+            res.status(200).json({
+                "classroom": "Classroom01",
+                "userimg": user.img,
+                "userOfname": nameOfuser,
+                "text": payload.text,
+            });
+        }).catch(err => {
+            res.status(500).json({
+                "description": "Can not get classroom Page - ดึง classroom ไม่ได้",
+                "error": err
+            });
+        })
+    }).catch(err => {
+        res.status(500).json({
+            "description": "Can not get user Page - ดึง user ไม่ได้",
+            "error": err
+        });
+    })
 }
 
 exports.create = (req, res) => {

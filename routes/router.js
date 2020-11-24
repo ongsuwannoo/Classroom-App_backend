@@ -73,6 +73,8 @@ module.exports = function (app) {
 
     app.get('/home/django/express/Classroom-App_backend/file/img/profile/:img', controller.imgProfile);
 
-    app.post('/api/classroom/:classroomId/chat/', controller_classroom.chatClassroom);
+    app.post('/api/classroom/:classroomId/chat/', [authJwt.verifyToken], controller_classroom.chatClassroom);
+
+    app.get('/api/classroom/:classroomId/chat/', [authJwt.verifyToken], controller_classroom.getAllChatByCllassroom);
 
 }

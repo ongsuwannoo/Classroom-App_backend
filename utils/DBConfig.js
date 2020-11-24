@@ -17,6 +17,7 @@ db.classroom = require('../Models/classroom.model.js')(sequelize, Sequelize);
 db.lesson = require('../Models/lesson.model.js')(sequelize, Sequelize);
 db.post = require('../Models/post.model.js')(sequelize, Sequelize);
 db.comment = require('../Models/comment.model.js')(sequelize, Sequelize);
+db.chat = require('../Models/chat.model.js')(sequelize, Sequelize);
 
 db.role.belongsToMany(db.user, { through: 'user_roles', foreignKey: 'roleId', otherKey: 'userId' });
 db.user.belongsToMany(db.role, { through: 'user_roles', foreignKey: 'userId', otherKey: 'roleId' });
