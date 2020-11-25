@@ -26,6 +26,14 @@ module.exports = (sequelize, Sequelize) => {
         time:{
             type: Sequelize.TIME,
             field: 'Class time'
+        },
+        endTime:{
+            type: Sequelize.INTEGER,
+            field: 'End time'
+        },
+        code:{
+            type: Sequelize.STRING,
+            field: 'code'
         }
     });
 

@@ -57,6 +57,11 @@ exports.getAllCommentByPostId = (req, res) => {
         Comment.findAll({
             where: {
                 postId: post.id
+            },
+            include: {
+                model: user,
+                as: 'user',
+                attributes: ['username', 'firstname', 'lastname', 'facebookName', 'img']
             }
         }).then(comments => {
             res.status(200).json({

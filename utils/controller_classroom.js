@@ -7,33 +7,6 @@ const Lesson = db.lesson;
 const Chat = db.chat;
 const { classroomFormat, asyncForEach, makeCode } = require('./function/classroom.function');
 
-const PubNub = require('pubnub');
-
-const pubnub = new PubNub({
-    publishKey: "pub-c-d0ea43cd-e94b-46e2-9f75-00e9e6a658b2",
-    subscribeKey: "sub-c-6a62607c-2d9b-11eb-ae78-c6faad964e01",
-    uuid: "sec-c-MjE2MmVmMTgtMTZlYy00ZTE4LWE3MzYtYjZjNjIxOTVjZmEz",
-});
-
-pubnub.addListener({
-    status: function (statusEvent) {
-        if (statusEvent.category === "PNConnectedCategory") {
-            // publishSampleMessage();
-        }
-    },
-    message: function (messageEvent) {
-        console.log('channel: ', messageEvent.channel);
-        console.log('message: ', messageEvent.message.description);
-    },
-    presence: function (presenceEvent) {
-        // handle presence
-    },
-});
-
-pubnub.subscribe({
-    channels: ["Classroom01", "Classroom02", "Classroom03"],
-});
-
 exports.getAllChatByCllassroom = (req, res) => {
     Chat.findAll({
         where: { classroomId: req.params.classroomId }
@@ -50,9 +23,8 @@ exports.getAllChatByCllassroom = (req, res) => {
     })
 }
 
-exports.chatClassroom = (req, res) => {
+exports.chatClassroom = async (req, res) => {
     let payload = req.body
-
     User.findOne({
         where: { id: req.userId }
     }).then(user => {
@@ -63,25 +35,15 @@ exports.chatClassroom = (req, res) => {
             nameOfuser = user.facebookName
         Classroom.findOne({
             where: { id: req.params.classroomId }
-        }).then(async classroom => {
+        }).then(classroom => {
             Chat.create({
                 text: payload.text,
                 ownerId: user.id,
-                classroomId: classroom.id
+                classroomId: classroom.id,
+                nameOfuser: user.facebookName || user.firstname + " " + user.lastname
             })
-            await pubnub.publish({
-                channel: "Classroom01",
-                message: {
-                    code: makeCode(3),
-                    description: payload.text,
-                    from: nameOfuser
-                },
-            })
-            res.status(200).json({
-                "classroom": "Classroom01",
-                "userimg": user.img,
-                "userOfname": nameOfuser,
-                "text": payload.text,
+            res.status(201).json({
+                "description": "Chat saved! - บันทึก chat เรียบร้อย",
             });
         }).catch(err => {
             res.status(500).json({
@@ -109,7 +71,8 @@ exports.create = (req, res) => {
             code: makeCode(5),
             ownerId: user.id,
             day: payload.datetime.split(" ")[0],
-            time: payload.datetime.split(" ")[1]
+            time: payload.datetime.split(" ")[1],
+            endTime: payload.endTime
         }).then(classroom => {
             for (let i = 0; i < 6; i++) {
                 Lesson.create({
@@ -298,11 +261,11 @@ exports.editClassroom = (req, res) => {
     let payload = req.body;
     Classroom.findByPk(req.params.classroomId).then(classroom => {
         classroom.update({
-            name: payload.name,
-            description: payload.description,
-            ownerId: user.id,
-            day: payload.datetime.split(" ")[0],
-            time: payload.datetime.split(" ")[1]
+            name: payload.name || classroom.name,
+            description: payload.description || classroom.description,
+            day: payload.datetime.split(" ")[0] || classroom.day,
+            time: payload.datetime.split(" ")[1] || classroom.time,
+            endTime: payload.endTime || classroom.endTime
         })
         classroom.save().then(() => {
             res.status(200).json({

@@ -29,6 +29,12 @@ module.exports = function (app) {
 
     app.get('/api/test/admin', [authJwt.verifyToken, authJwt.isAdmin], controller.adminBoard);
 
+    app.post('/api/auth/forgotpassword', controller.forgotPassword);
+
+    app.post('/api/auth/resetpassword', controller.resetPassword);
+
+    app.post('/api/auth/confirmpassword', controller.confirmPassword);
+
     //classroom
 
     app.post('/api/classroom/create', [authJwt.verifyToken], controller_classroom.create);
@@ -68,6 +74,8 @@ module.exports = function (app) {
     //other
 
     app.get('/api/get/pdf', controller.pdf);
+
+    app.get('/api/test', controller.test);
 
     app.get('/home/django/express/Classroom-App_backend/file/img/:img', controller.img);
 

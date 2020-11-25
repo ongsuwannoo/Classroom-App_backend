@@ -1,5 +1,7 @@
 const db = require('../DBConfig.js');
 const User = db.user;
+const Chat = db.chat;
+const moment = require('moment');
 
 exports.classroomFormat = async (user, classroom) => {
     let userIsOwner = user.id == classroom.ownerId;
@@ -11,10 +13,18 @@ exports.classroomFormat = async (user, classroom) => {
         else if (user.facebookName)
             return ({ nameOwner: user.facebookName, userOwner: user })
     })
+
+    let chats = await Chat.findAll({
+        where: { classroomId: classroom.id }
+    })
+
+    let endClassTime = moment(classroom.time, 'HH:mm:ss').add(classroom.endTime, 'h').format("HH:mm:ss")
     return {
         userIsOwner: userIsOwner,
         userOwner: userOwner.userOwner,
-        nameOwner: userOwner.nameOwner
+        nameOwner: userOwner.nameOwner,
+        endClassTime: endClassTime,
+        chats: chats
     }
 }
 

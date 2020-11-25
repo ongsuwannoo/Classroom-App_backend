@@ -11,6 +11,10 @@ module.exports = (sequelize, Sequelize) => {
         classroomId:{
             type: Sequelize.INTEGER,
             field: 'classroomId',
+        },
+        nameOfuser: {
+            type: Sequelize.STRING,
+            field: 'nameOfuser',
         }
     });
 
